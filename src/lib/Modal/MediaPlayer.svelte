@@ -127,115 +127,129 @@
 				{attributes?.media_title}
 			{/if}
 		</h2>
-
-		{#if attributes?.media_artist || attributes?.media_title}
-			{#if attributes?.entity_picture}
-				<img src={attributes?.entity_picture} alt={attributes?.media_title} />
+		<div class="container-media-player">
+			{#if attributes?.media_artist || attributes?.media_title}
+				{#if attributes?.entity_picture}
+					<img src={attributes?.entity_picture} alt={attributes?.media_title} />
+				{/if}
 			{/if}
-		{/if}
 
-		{#if attributes?.media_position && attributes?.media_duration}
-			<div class="time-container">
-				<div class="current-time">
-					{#if isDragging || debouncePosition}
-						{convertToHMS(currentSliderValue) || '00:00'}
-					{:else}
-						{convertToHMS(rangeValue)}
-					{/if}
+			<div class="media-player-actions">
+				{#if attributes?.media_position && attributes?.media_duration}
+					<div class="time-container">
+						<div class="current-time">
+							{#if isDragging || debouncePosition}
+								{convertToHMS(currentSliderValue) || '00:00'}
+							{:else}
+								{convertToHMS(rangeValue)}
+							{/if}
+						</div>
+						<div class="duration-time">
+							{convertToHMS(attributes?.media_duration)}
+						</div>
+					</div>
+				{/if}
+
+				{#if attributes?.media_duration !== undefined && attributes?.media_position !== undefined && attributes?.media_position_updated_at}
+					<RangeSlider
+						value={rangeValue}
+						min={0}
+						max={attributes?.media_duration}
+						on:input={(event) => {
+							handleChange(event.detail);
+						}}
+						on:dragging={(event) => {
+							isDragging = event.detail;
+							if (event.detail) {
+								clearTimeout(debounceTimeout);
+							}
+						}}
+					/>
+
+					<br />
+				{/if}
+
+				<div class="icon-container">
+					<!-- previous -->
+					<button
+						use:Ripple={$ripple}
+						on:click={() => {
+							handleClick('media_previous_track');
+						}}
+					>
+						<Icon icon="ic:round-fast-rewind" height="none" />
+					</button>
+
+					<!-- pause -->
+					<button
+						use:Ripple={$ripple}
+						style:display={entity?.state === 'playing' ? 'block' : 'none'}
+						on:click={() => {
+							handleClick('media_pause');
+						}}
+					>
+						<Icon icon="ic:round-pause" height="none" />
+					</button>
+
+					<!-- play -->
+					<button
+						on:click={() => handleClick('media_play')}
+						use:Ripple={$ripple}
+						style:display={entity?.state !== 'playing' ? 'block' : 'none'}
+					>
+						<Icon icon="ic:round-play-arrow" height="none" />
+					</button>
+
+					<!-- next -->
+					<button on:click={() => handleClick('media_next_track')} use:Ripple={$ripple}>
+						<Icon icon="ic:round-fast-forward" height="none" />
+					</button>
 				</div>
-				<div class="duration-time">
-					{convertToHMS(attributes?.media_duration)}
+
+				<br />
+
+				<!--{$lang('volume_level')}-->
+
+				<div class="vol-container">
+					<!-- volume_up -->
+					<button on:click={() => handleClick('volume_up')} use:Ripple={$ripple}>
+						<div style="scale: 90%; margin-bottom: -0.2rem;">
+							<Icon icon="typcn:plus" height="none" />
+						</div>
+					</button>
+
+					<!-- vol text -->
+					<!-- <div>VOL</div> -->
+
+					<!-- volume_down -->
+					<button
+						use:Ripple={$ripple}
+						on:click={() => {
+							handleClick('volume_down');
+						}}
+					>
+						<div style="scale: 90%; margin-bottom: -0.2rem;">
+							<Icon icon="typcn:minus" height="none" />
+						</div>
+					</button>
 				</div>
 			</div>
-		{/if}
-
-		{#if attributes?.media_duration !== undefined && attributes?.media_position !== undefined && attributes?.media_position_updated_at}
-			<RangeSlider
-				value={rangeValue}
-				min={0}
-				max={attributes?.media_duration}
-				on:input={(event) => {
-					handleChange(event.detail);
-				}}
-				on:dragging={(event) => {
-					isDragging = event.detail;
-					if (event.detail) {
-						clearTimeout(debounceTimeout);
-					}
-				}}
-			/>
-
-			<br />
-		{/if}
-
-		<div class="icon-container">
-			<!-- previous -->
-			<button
-				use:Ripple={$ripple}
-				on:click={() => {
-					handleClick('media_previous_track');
-				}}
-			>
-				<Icon icon="ic:round-fast-rewind" height="none" />
-			</button>
-
-			<!-- pause -->
-			<button
-				use:Ripple={$ripple}
-				style:display={entity?.state === 'playing' ? 'block' : 'none'}
-				on:click={() => {
-					handleClick('media_pause');
-				}}
-			>
-				<Icon icon="ic:round-pause" height="none" />
-			</button>
-
-			<!-- play -->
-			<button
-				on:click={() => handleClick('media_play')}
-				use:Ripple={$ripple}
-				style:display={entity?.state !== 'playing' ? 'block' : 'none'}
-			>
-				<Icon icon="ic:round-play-arrow" height="none" />
-			</button>
-
-			<!-- next -->
-			<button on:click={() => handleClick('media_next_track')} use:Ripple={$ripple}>
-				<Icon icon="ic:round-fast-forward" height="none" />
-			</button>
-		</div>
-
-		<br />
-
-		{$lang('volume_level')}
-
-		<div class="vol-container">
-			<!-- volume_up -->
-			<button on:click={() => handleClick('volume_up')} use:Ripple={$ripple}>
-				<div style="scale: 90%; margin-bottom: -0.2rem;">
-					<Icon icon="typcn:plus" height="none" />
-				</div>
-			</button>
-
-			<!-- vol text -->
-			<div>VOL</div>
-
-			<!-- volume_down -->
-			<button
-				use:Ripple={$ripple}
-				on:click={() => {
-					handleClick('volume_down');
-				}}
-			>
-				<div style="scale: 90%; margin-bottom: -0.2rem;">
-					<Icon icon="typcn:minus" height="none" />
-				</div>
-			</button>
 		</div>
 	</Modal>
 {/if}
 
 <style>
+	.container-media-player{
+		display: flex;
+		align-items:center;
+		justify-content:center;
+		flex-direction:row;
+	}
+
+	.media-player-actions{
+		width: 100%;
+    	margin-left: 1.5rem;
+	}
 	.time-container {
 		display: flex;
 		justify-content: space-between;
@@ -267,6 +281,7 @@
 		box-shadow:
 			rgba(0, 0, 0, 0.3) 0px 19px 38px,
 			rgba(0, 0, 0, 0.22) 0px 15px 12px;
+		max-width: 250px;
 	}
 
 	button {
