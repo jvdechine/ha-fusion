@@ -246,6 +246,12 @@
 		flex-direction:row;
 	}
 
+	@media all and (max-width: 768px) {
+		.container-media-player{
+			flex-direction:column;
+		}
+	}
+
 	.media-player-actions{
 		width: 100%;
     	margin-left: 1.5rem;
