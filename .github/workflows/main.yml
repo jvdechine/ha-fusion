@@ -46,5 +46,5 @@ jobs:
           context: .
           push: true
           platforms: ${{ matrix.platform }}
-          tags: ${{ steps.meta.outputs.tags }}-${{ matrix.platform }}
+          tags: ${{ github.ref_name }}-${{ matrix.tag_suffix }}
           labels: ${{ steps.meta.outputs.labels }}
