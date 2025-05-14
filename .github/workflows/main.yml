@@ -1,4 +1,4 @@
-name: Build and Push One Image per Platform
+ename: Build and Push One Image per Platform
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/owner/repo
+          images: ghcr.io/dechinejv/ha-fusion
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
