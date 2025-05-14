@@ -1,4 +1,4 @@
-ename: Build and Push One Image per Platform
+name: Build and Push One Image per Platform
 
 on:
   push:
