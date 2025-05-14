@@ -254,30 +254,33 @@
 			});
 		} else {
 			if (active) { 
-				// icon
-				// if (currentState === 'playing') {
-				// 	overlayIconState = 'paused';
-				// } else if (currentState === 'paused') {
-				// 	overlayIconState = 'playing';
-				// 	currentState = 'playing';
-				// } else {
-				// 	overlayIconState = undefined;
-				// }
+				if (sel?.more_info === true) {
+					openModal(() => import('$lib/Modal/MediaPlayer.svelte'), {
+						selected: sel
+					}); 
+				}else{
+					//icon
+					if (currentState === 'playing') {
+						overlayIconState = 'paused';
+					} else if (currentState === 'paused') {
+						overlayIconState = 'playing';
+						currentState = 'playing';
+					} else {
+						overlayIconState = undefined;
+					}
 
-				// await callService($connection, 'media_player', 'media_play_pause', {
-				// 	entity_id: current_media_player?.entity_id
-				// });
+					await callService($connection, 'media_player', 'media_play_pause', {
+						entity_id: current_media_player?.entity_id
+					});
 
-				// clearTimeout(timeoutOverlay);
-				// timeoutOverlay = setTimeout(
-				// 	() => {
-				// 		overlayIconState = undefined;
-				// 	},
-				// 	overlayIconState === 'playing' ? 600 : 900
-				// );
-				openModal(() => import('$lib/Modal/MediaPlayer.svelte'), {
-					selected: sel
-				}); 
+					clearTimeout(timeoutOverlay);
+					timeoutOverlay = setTimeout(
+						() => {
+							overlayIconState = undefined;
+						},
+						overlayIconState === 'playing' ? 600 : 900
+					);
+				}
 			}
 		}
 	}

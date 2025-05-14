@@ -243,6 +243,21 @@
 			</button>
 		</div>
 
+		<h2>Exibe informações</h2>
+		<div class="button-container">
+			<button class:selected={!sel?.more_info} on:click={() => set('more_info')} use:Ripple={$ripple}>
+				{$lang('no')}
+			</button>
+
+			<button
+				class:selected={sel?.more_info}
+				on:click={() => set('more_info', true)}
+				use:Ripple={$ripple}
+			>
+				{$lang('yes')}
+			</button>
+		</div>
+
 		{#if debug}
 			<h2>Debug</h2>
 			<pre><code>{JSON.stringify(sel, null, 2)}</code></pre>
