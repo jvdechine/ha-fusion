@@ -30,7 +30,7 @@
 	}
 
 	async function enterCode() {
-		if (!code) return;
+		if (!code && entity.attributes.code_arm_required) return;
 
 		try {
 			const service = selectedService || 'alarm_disarm';
@@ -69,21 +69,21 @@
 			icon: 'mdi:lock',
 			label: $lang('alarm_modes_armed_away')
 		},
-		{
-			id: 'alarm_arm_night',
-			icon: 'mdi:moon-waning-crescent',
-			label: $lang('alarm_modes_armed_night')
-		},
-		{
-			id: 'alarm_arm_vacation',
-			icon: 'mdi:airplane',
-			label: $lang('alarm_modes_armed_vacation')
-		},
-		{
-			id: 'alarm_arm_custom_bypass',
-			icon: 'mdi:shield',
-			label: $lang('alarm_modes_armed_custom_bypass')
-		},
+		// {
+		// 	id: 'alarm_arm_night',
+		// 	icon: 'mdi:moon-waning-crescent',
+		// 	label: $lang('alarm_modes_armed_night')
+		// },
+		// {
+		// 	id: 'alarm_arm_vacation',
+		// 	icon: 'mdi:airplane',
+		// 	label: $lang('alarm_modes_armed_vacation')
+		// },
+		// {
+		// 	id: 'alarm_arm_custom_bypass',
+		// 	icon: 'mdi:shield',
+		// 	label: $lang('alarm_modes_armed_custom_bypass')
+		// },
 		{
 			id: 'alarm_disarm',
 			icon: 'mdi:shield-off',
@@ -111,42 +111,47 @@
 				value={'alarm_disarm'}
 				on:change={(event) => {
 					selectedService = event.detail;
+					if(entity.attributes.code_arm_required == false){
+						enterCode();
+					}
 				}}
 			/>
 		{/if}
 
-		<div class="container">
-			<input type="password" class:reject bind:value={code} />
+		{#if entity.attributes.code_arm_required == true || state !== 'disarmed'}
+			<div class="container">
+				<input type="password" class:reject bind:value={code} />
 
-			<div class="buttons">
-				{#each [1, 2, 3, 4, 5, 6, 7, 8, 9] as digit}
-					<button on:click={() => addCode(digit)} use:Ripple={$ripple}>
-						{digit}
+				<div class="buttons">
+					{#each [1, 2, 3, 4, 5, 6, 7, 8, 9] as digit}
+						<button on:click={() => addCode(digit)} use:Ripple={$ripple}>
+							{digit}
+						</button>
+					{/each}
+
+					<button
+						on:click={clearCode}
+						use:Ripple={$ripple}
+						style:background-color={code === '' ? '' : '#422522'}
+						style:transition="background-color {$motion}ms ease"
+					>
+						<Icon
+							icon="gravity-ui:xmark"
+							height="none"
+							style={`width: 1.65rem; ${
+								code === '' ? '' : `color: #e15241; transition: background-color ${$motion}ms ease;`
+							}`}
+						></Icon>
 					</button>
-				{/each}
 
-				<button
-					on:click={clearCode}
-					use:Ripple={$ripple}
-					style:background-color={code === '' ? '' : '#422522'}
-					style:transition="background-color {$motion}ms ease"
-				>
-					<Icon
-						icon="gravity-ui:xmark"
-						height="none"
-						style={`width: 1.65rem; ${
-							code === '' ? '' : `color: #e15241; transition: background-color ${$motion}ms ease;`
-						}`}
-					></Icon>
-				</button>
+					<button on:click={() => addCode(0)} use:Ripple={$ripple}>0</button>
 
-				<button on:click={() => addCode(0)} use:Ripple={$ripple}>0</button>
-
-				<button on:click={enterCode} use:Ripple={$ripple} style:background-color="#293828">
-					<Icon icon="gravity-ui:check" height="none" style="width: 1.8rem; color: #67ad5b;"></Icon>
-				</button>
+					<button on:click={enterCode} use:Ripple={$ripple} style:background-color="#293828">
+						<Icon icon="gravity-ui:check" height="none" style="width: 1.8rem; color: #67ad5b;"></Icon>
+					</button>
+				</div>
 			</div>
-		</div>
+		{/if}
 	</Modal>
 {/if}
 

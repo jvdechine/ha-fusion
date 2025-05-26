@@ -54,7 +54,9 @@ export const onStates = readable([
 	'performance',
 	'high_demand',
 	'heat_pump',
-	'gas'
+	'gas',
+	'armed_home',
+	'armed_away'
 ]);
 
 // climate states

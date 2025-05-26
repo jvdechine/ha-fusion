@@ -2,184 +2,294 @@ views:
   - name: Geral
     id: 8223229958096
     sections:
-      - name: Sala
+      - name: Casa
         items:
-          - id: 7451245192208
+          - id: 7312047574078
             type: button
-            entity_id: switch.interruptor_sala_porta_switch_1
-            name: Luz
+            entity_id: cover.portao_garagem_door
+            name: Portão
             template:
               state: |-
-                {% if is_state(entity_id, "on") %}
-                  Ligada
+                {% if is_state(entity_id, "closed") %}
+                  Fechado
                 {% else %}
-                  Desligada
+                  Aberto
+                {% endif %}
+            more_info: false
+          - id: 9821487501683
+            type: button
+            entity_id: alarm_control_panel.home_alarm
+            template:
+              color: >-
+                {% if is_state(entity_id, "armed_away") or is_state(entity_id,
+                "armed_home") %}
+                  green
+                {% else %}
+                  darkred
+                {% endif %}
+          - id: 8822081298024
+            type: button
+            entity_id: sensor.quantidade_luzes_ligadas
+            template:
+              state: |-
+                {% if int(states(entity_id)) > 0 %}
+                  Clique para desligar
+                {% else %}
+                  Nenhuma luz ligada
                 {% endif %}
               color: |-
-                {% if is_state(entity_id, "on") %}
+                {% if int(states(entity_id)) > 0 %}
                   #CC7722
-                {% else %}
-                  transparent
                 {% endif %}
-            more_info: false
-            icon: material-symbols-light:lightbulb-rounded
-          - id: 9021562437534
-            type: button
-            entity_id: vacuum.xiaomi_robot_vacuum_s10
-            more_info: false
-            template:
               service: |-
-                service: script.limpar_sala
-                data: {
-                  segment: 1
-                }
-              state: |-
-                {% if is_state_attr(entity_id, "charging", true) %}
-                Na base
-                {% elif is_state_attr(entity_id, "started", true) %}
-                Limpando
-                {% elif is_state_attr(entity_id, "paused", true) %}
-                Pausado
-                {% elif is_state_attr(entity_id, "running", true) %}
-                Limpando
-                {% elif is_state_attr(entity_id, "returning", true) %}
-                Voltando para base
-                {% endif %}
-              color: |-
-                {% if is_state(entity_id, "on") %}
-                  #CC7722
-                {% else %}
-                  transparent
-                {% endif %}
-            name: Limpar
-            icon: solar:smart-vacuum-cleaner-bold
-        id: 1748588094117
-      - name: Copa
-        items:
-          - id: 9470966066411
-            type: button
-            entity_id: switch.interruptor_copa_porta_switch_2
-            name: Luz
-            template:
-              state: |-
-                {% if is_state(entity_id, "on") %}
-                  Ligada
-                {% else %}
-                  Desligada
-                {% endif %}
-              color: |-
-                {% if is_state(entity_id, "on") %}
-                  #CC7722
-                {% else %}
-                  transparent
-                {% endif %}
+                service: script.desligar_todas_luzes
+                data: {}
             icon: material-symbols-light:lightbulb-rounded
+            name: Desligar todas as luzes
             more_info: false
-        id: 6049024064882
-      - name: Cozinha
-        items:
-          - id: 8607889404389
-            type: button
-            entity_id: switch.interruptor_cozinha_porta_switch_1
-            name: Luz
-            template:
-              state: |-
-                {% if is_state(entity_id, "on") %}
-                  Ligada
-                {% else %}
-                  Desligada
-                {% endif %}
-              color: |-
-                {% if is_state(entity_id, "on") %}
-                  #CC7722
-                {% else %}
-                  transparent
-                {% endif %}
-            icon: material-symbols-light:lightbulb-rounded
-            more_info: false
-          - id: 5302394006652
-            type: button
-            entity_id: switch.interruptor_cozinha_porta_switch_3
-            name: Pendentes
-            template:
-              state: |-
-                {% if is_state(entity_id, "on") %}
-                  Ligada
-                {% else %}
-                  Desligada
-                {% endif %}
-              color: |-
-                {% if is_state(entity_id, "on") %}
-                  #CC7722
-                {% else %}
-                  transparent
-                {% endif %}
-            more_info: false
-            icon: material-symbols-light:lightbulb-rounded
-        id: 1708923597800
+        id: 2083423904824
+      - type: horizontal-stack
+        sections:
+          - name: Sala
+            items:
+              - id: 7451245192208
+                type: button
+                entity_id: switch.interruptor_sala_porta_switch_1
+                name: Luz
+                template:
+                  state: |-
+                    {% if is_state(entity_id, "on") %}
+                      Ligada
+                    {% else %}
+                      Desligada
+                    {% endif %}
+                  color: |-
+                    {% if is_state(entity_id, "on") %}
+                      #CC7722
+                    {% endif %}
+                more_info: false
+                icon: material-symbols-light:lightbulb-rounded
+            id: 1748588094117
+          - name: Copa
+            items:
+              - id: 9470966066411
+                type: button
+                entity_id: switch.interruptor_copa_porta_switch_2
+                name: Luz
+                template:
+                  state: |-
+                    {% if is_state(entity_id, "on") %}
+                      Ligada
+                    {% else %}
+                      Desligada
+                    {% endif %}
+                  color: |-
+                    {% if is_state(entity_id, "on") %}
+                      #CC7722
+                    {% endif %}
+                icon: material-symbols-light:lightbulb-rounded
+                more_info: false
+            id: 6049024064882
+        id: 4558175238582
+      - type: horizontal-stack
+        sections:
+          - name: Cozinha
+            items:
+              - id: 8607889404389
+                type: button
+                entity_id: switch.interruptor_cozinha_porta_switch_1
+                name: Luz
+                template:
+                  state: |-
+                    {% if is_state(entity_id, "on") %}
+                      Ligada
+                    {% else %}
+                      Desligada
+                    {% endif %}
+                  color: |-
+                    {% if is_state(entity_id, "on") %}
+                      #CC7722
+                    {% endif %}
+                icon: material-symbols-light:lightbulb-rounded
+                more_info: false
+              - id: 5302394006652
+                type: button
+                entity_id: switch.interruptor_cozinha_porta_switch_3
+                name: Pendentes
+                template:
+                  state: |-
+                    {% if is_state(entity_id, "on") %}
+                      Ligada
+                    {% else %}
+                      Desligada
+                    {% endif %}
+                  color: |-
+                    {% if is_state(entity_id, "on") %}
+                      #CC7722
+                    {% endif %}
+                more_info: false
+                icon: material-symbols-light:lightbulb-rounded
+            id: 1708923597800
+          - name: Corredor
+            items:
+              - id: 8849036255898
+                type: button
+                entity_id: light.interruptor_quarto_porta_switch_2
+                template:
+                  state: |-
+                    {% if is_state(entity_id, "on") %}
+                      Ligada
+                    {% else %}
+                      Desligada
+                    {% endif %}
+                  color: |-
+                    {% if is_state(entity_id, "on") %}
+                      #CC7722
+                    {% endif %}
+                more_info: false
+            id: 8256202938113
+        id: 4200469802268
+      - type: horizontal-stack
+        sections:
+          - name: Escritório
+            items:
+              - id: 8416224932583
+                type: button
+                entity_id: light.interruptor_escritorio_porta_switch_2
+                template:
+                  state: |-
+                    {% if is_state(entity_id, "on") %}
+                      Ligada
+                    {% else %}
+                      Desligada
+                    {% endif %}
+                  color: |-
+                    {% if is_state(entity_id, "on") %}
+                      #CC7722
+                    {% endif %}
+                more_info: false
+            id: 8093389949114
+          - name: Quarto
+            items:
+              - id: 3234276456462
+                type: button
+                entity_id: light.interruptor_quarto_porta_switch_1
+                template:
+                  state: |-
+                    {% if is_state(entity_id, "on") %}
+                      Ligada
+                    {% else %}
+                      Desligada
+                    {% endif %}
+                  color: |-
+                    {% if is_state(entity_id, "on") %}
+                      #CC7722
+                    {% endif %}
+                more_info: false
+            id: 5198099138979
+        id: 5765705923416
   - name: Sala
     id: 5738886241992
     sections:
-      - name: TV
-        items:
-          - id: 8154824220734
-            type: button
-            entity_id: media_player.tv
-            name: TV
-            template:
-              state: |-
-                {% if is_state(entity_id, "on") %}
-                  Ligada - Volume: {{ int(state_attr(entity_id, "volume_level") * 100) }}
-                {% else %}
-                  Desligada
-                {% endif %}
-            icon: material-symbols:tv
-            marquee: false
-          - id: 5942997885166
-            type: button
-            entity_id: script.ligar_tv_sala_youtube
-            name: YouTube
-            icon: mdi:youtube
-            more_info: false
-            template:
-              color: |-
-                {% if is_state(entity_id, "on") %}
-                  red
-                {% endif %}
-        id: 3402241572477
-      - name: Música
-        items:
-          - id: 9138276284880
-            type: button
-            entity_id: script.tocar_musica
-            name: POP
-            state: Clique para tocar
-            icon: mage:music-fill
-            template:
-              service: |-
-                service: script.tocar_musica
-                data: {
-                  entity_id: media_player.sala_de_estar,
-                  style: "Mix: POP"
-                }
-            more_info: false
-          - id: 8157990971092
-            type: button
-            entity_id: script.tocar_musica
-            name: Eletrônica
-            state: Clique para tocar
-            icon: mage:music-fill
-            template:
-              service: |-
-                service: script.tocar_musica
-                data: {
-                  entity_id: media_player.sala_de_estar,
-                  style: "Eletrônicas 2025"
-                }
-            more_info: false
-        id: 4055077960794
       - type: horizontal-stack
         sections:
+          - name: TV
+            items:
+              - id: 8154824220734
+                type: button
+                entity_id: media_player.tv
+                name: TV
+                template:
+                  state: |-
+                    {% if is_state(entity_id, "on") %}
+                      Ligada - Volume: {{ int(state_attr(entity_id, "volume_level") * 100) }}
+                    {% else %}
+                      Desligada
+                    {% endif %}
+                icon: material-symbols:tv
+                marquee: false
+                more_info: false
+              - id: 5942997885166
+                type: button
+                entity_id: script.ligar_tv_sala_youtube
+                name: YouTube
+                icon: mdi:youtube
+                more_info: false
+                template:
+                  color: |-
+                    {% if is_state(entity_id, "on") %}
+                      red
+                    {% endif %}
+                  service: |-
+                    service: script.ligar_tv_sala_youtube
+                    data: {}
+            id: 3402241572477
+          - name: Limpar
+            items:
+              - id: 9021562437534
+                type: button
+                entity_id: vacuum.xiaomi_robot_vacuum_s10
+                more_info: false
+                template:
+                  service: |-
+                    service: script.limpar_sala
+                    data: {
+                      segment: 1
+                    }
+                  state: |-
+                    {% if is_state_attr(entity_id, "charging", true) %}
+                    Na base
+                    {% elif is_state_attr(entity_id, "started", true) %}
+                    Limpando
+                    {% elif is_state_attr(entity_id, "paused", true) %}
+                    Pausado
+                    {% elif is_state_attr(entity_id, "running", true) %}
+                    Limpando
+                    {% elif is_state_attr(entity_id, "returning", true) %}
+                    Voltando para base
+                    {% endif %}
+                  color: >-
+                    {% if is_state(entity_id, "on") or is_state(entity_id,
+                    "cleaning") %}
+                      #CC7722
+                    {% endif %}
+                name: Limpar
+                icon: solar:smart-vacuum-cleaner-bold
+            id: 2163604360341
+        id: 4561243997355
+      - type: horizontal-stack
+        sections:
+          - name: Música
+            items:
+              - id: 9138276284880
+                type: button
+                entity_id: script.tocar_musica
+                name: POP
+                state: Clique para tocar
+                icon: mage:music-fill
+                template:
+                  service: |-
+                    service: script.tocar_musica
+                    data: {
+                      entity_id: media_player.sala_de_estar,
+                      style: "Mix: POP"
+                    }
+                more_info: false
+              - id: 8157990971092
+                type: button
+                entity_id: script.tocar_musica
+                name: Eletrônica
+                state: Clique para tocar
+                icon: mage:music-fill
+                template:
+                  service: |-
+                    service: script.tocar_musica
+                    data: {
+                      entity_id: media_player.sala_de_estar,
+                      style: "Eletrônicas 2025"
+                    }
+                more_info: false
+            id: 4055077960794
           - name: Tocando agora
             items:
               - id: 7086022075407
@@ -189,62 +299,6 @@ views:
                   - entity_id: media_player.sala_de_estar
                 show_timeout: true
                 more_info: true
-              - id: 9179679503971
-                type: button
-                entity_id: script.passar_musica
-                name: Próxima música
-                state: Clique para passar
-                icon: mage:next-fill
-                more_info: false
-                template:
-                  service: |-
-                    service: script.passar_musica
-                    data: {
-                      entity_id: media_player.sala_de_estar
-                    }
-              - id: 184783530937
-                type: button
-                entity_id: script.aumentar_volume
-                name: Aumentar Volume
-                icon: icon-park-solid:volume-up
-                more_info: false
-                template:
-                  state: >-
-                    Volume atual: {{ ((state_attr("media_player.sala_de_estar",
-                    "volume_level")) * 100)|int }}%
-                  service: |
-                    service: script.aumentar_volume
-                    data: {
-                      entity_id: media_player.sala_de_estar
-                    }
-              - id: 8592768618356
-                type: button
-                entity_id: script.diminuir_volume
-                name: Diminuir Volume
-                template:
-                  service: |-
-                    service: script.diminuir_volume
-                    data: {
-                      entity_id: media_player.sala_de_estar
-                    }
-                  state: >-
-                    Volume atual: {{ ((state_attr("media_player.sala_de_estar",
-                    "volume_level")) * 100)|int }}%
-                icon: icon-park-solid:volume-down
-                more_info: false
-              - id: 5322182416872
-                type: button
-                entity_id: script.desligar_musica
-                name: Parar Música
-                state: Clique para parar
-                icon: material-symbols:stop-rounded
-                template:
-                  service: |
-                    service: script.desligar_musica
-                    data: {
-                      entity_id: media_player.sala_de_estar
-                    }
-                more_info: false
             id: 8407741718510
             visibility:
               - condition: or
@@ -274,19 +328,27 @@ views:
 sidebar:
   - id: 4213334394144
     type: time
+    hide_mobile: true
   - id: 2232661281887
     type: date
+    hide_mobile: true
   - id: 4509996332051
     type: divider
+    hide_mobile: true
   - id: 5197751942515
     type: weather_forecast
     entity_id: weather.forecast_casa
+    hide_mobile: true
   - id: 8171821524983
     type: graph
     entity_id: sensor.temperatura_sala_template
     name: Temperatura
     period: hour
     hide_mobile: true
+    stroke: 2
   - id: 9834553612452
     type: divider
+    hide_mobile: true
 theme: muted
+hide_views: false
+hide_sidebar: false
