@@ -30,7 +30,7 @@ const entryMiddleware = async (req, res, next) => {
 		}
 		// exposed port
 		else if (host && EXPOSED_PORT && HASS_PORT) {
-			const proto = req.secure ? 'https' : 'http';
+			const proto = req.secure || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
 			target = `${proto}://${host.replace(EXPOSED_PORT, HASS_PORT)}`;
 		}
 	}
@@ -49,8 +49,13 @@ const entryMiddleware = async (req, res, next) => {
 // production proxy
 const proxy = createProxyMiddleware({
 	pathFilter: ['/local/', '/api/'],
-	router: (req) => req.target,
-	changeOrigin: true
+	router: req => req.target,
+	changeOrigin: true,
+	ws: true, // ✅ WebSocket support
+	onProxyReq: (proxyReq, req) => {
+		// Useful headers if needed
+		proxyReq.setHeader('X-Forwarded-Proto', req.secure ? 'https' : 'http');
+	}
 });
 
 app.use(entryMiddleware, proxy);
@@ -58,7 +63,7 @@ app.use(entryMiddleware, proxy);
 // let SvelteKit handle everything else, including serving prerendered pages and static assets
 app.use(handler);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
 	if (ADDON) {
 		console.log('ADDON:', ADDON);
 		console.log('INGRESS_PORT:', PORT);
@@ -70,3 +75,6 @@ app.listen(PORT, () => {
 		console.log('ADDON:', ADDON);
 	}
 });
+
+// Handle WebSocket upgrade manually
+server.on('upgrade', proxy.upgrade);
