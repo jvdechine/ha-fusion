@@ -14,22 +14,15 @@ const { PORT, HASS_PORT, EXPOSED_PORT } = process.env;
 const entryMiddleware = async (req, res, next) => {
 	// default
 	let target = process.env.HASS_URL;
-	console.log("target => ", target)
-	console.log("ADDON => ", ADDON)
+
 	if (ADDON) {
 		// headers
-		console.log("source => ", source)
-		console.log("forwardedProto => ", forwardedProto)
-		console.log("forwardedHost => ", forwardedHost)
-		console.log("host => ", host)
-
 		const {
 			'x-hass-source': source,
 			'x-forwarded-proto': forwardedProto,
 			'x-forwarded-host': forwardedHost,
 			host
 		} = req.headers;
-		console.log("req.secure => ", req.secure);
 
 		// ingress
 		if (source && forwardedProto && forwardedHost) {
