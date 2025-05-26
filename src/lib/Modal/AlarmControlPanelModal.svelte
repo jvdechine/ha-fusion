@@ -167,7 +167,7 @@
 		border: none;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 		color: white;
-		width: 20rem;
+		width: calc(100% - 1.9rem);
 		margin: 2rem auto;
 		outline: none;
 		border-radius: 0.4rem 0.4rem 0 0;
@@ -196,6 +196,16 @@
 		font-size: 1.5rem;
 		color: white;
 		border: 1px solid rgba(255, 255, 255, 0.2);
+	}
+
+	@media all and (max-width: 768px) {
+		.buttons{
+			margin-bottom: 0 !important;
+		}
+		button {
+			height: 3rem;
+			width: 3rem;
+		}
 	}
 
 	.reject {
