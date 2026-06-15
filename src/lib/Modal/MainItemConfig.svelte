@@ -20,6 +20,7 @@
 	import ConfigButtons from '$lib/Modal/ConfigButtons.svelte';
 	import Ripple from 'svelte-ripple';
 	import PictureElements from '$lib/Main/PictureElements.svelte';
+	import Iframe from '$lib/Main/Iframe.svelte';
 
 	export let isOpen: boolean;
 	export let sel: any;
@@ -123,6 +124,14 @@
 				demo: $demo.media_player,
 				sel
 			}
+		},
+		{
+			id: 'iframe',
+			type: $lang('iframe'),
+			component: Iframe,
+			props: {
+				sel
+			}
 		}
 	];
 
@@ -167,6 +176,9 @@
 
 			case 'empty':
 				openModal(() => import('$lib/Modal/EmptyConfig.svelte'), { sel });
+				break;
+			case 'iframe':
+				openModal(() => import('$lib/Modal/IframeConfig.svelte'), { sel });
 				break;
 			default:
 				openModal(() => import('$lib/Modal/MainItemConfig.svelte'), { sel });
