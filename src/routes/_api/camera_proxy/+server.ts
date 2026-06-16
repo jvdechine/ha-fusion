@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const HASS_URL = process.env.HASS_URL?.replace(/\/$/, '');
+const HASS_URL = (process.env.HASS_INTERNAL_URL || process.env.HASS_URL)?.replace(/\/$/, '');
 
 export const GET = async ({ url }) => {
 	const path = url.searchParams.get('path');
