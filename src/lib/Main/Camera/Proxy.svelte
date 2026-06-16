@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { editMode } from '$lib/Stores';
+	import { editMode, configuration } from '$lib/Stores';
 	import { onMount } from 'svelte';
 	import Broken from '$lib/Main/Camera/Broken.svelte';
 
@@ -16,7 +16,11 @@
 	let date: number;
 	let interval: ReturnType<typeof setInterval>;
 
-	$: entity_picture = entity?.attributes?.entity_picture || '';
+	$: rawPicture = entity?.attributes?.entity_picture || '';
+	$: entity_picture =
+		rawPicture.startsWith('/') && $configuration?.hassUrl
+			? `${$configuration.hassUrl}${rawPicture}`
+			: rawPicture;
 	$: proxy_stream = (!muted || sel?.stream) && !stream_url && !$editMode;
 
 	function handleError(error: boolean) {
