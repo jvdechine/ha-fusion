@@ -45,6 +45,9 @@ export async function load({ request }): Promise<{
 	// hassUrl from env or server.js
 	configuration.hassUrl = process.env.HASS_URL || request.headers.get('X-Proxy-Target');
 
+	// ingress mode is identified by the x-hass-source header set by Home Assistant supervisor
+	configuration.ingress = !!request.headers.get('x-hass-source');
+
 	// initialize keys if missing
 	dashboard.views = dashboard.views || [];
 	dashboard.sidebar = dashboard.sidebar || [];

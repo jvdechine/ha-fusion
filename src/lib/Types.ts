@@ -5,6 +5,7 @@ import type { ShapeConfig } from 'konva/lib/Shape';
 
 export interface Configuration {
 	hassUrl?: string;
+	ingress?: boolean;
 	locale?: string;
 	custom_js?: boolean;
 	motion?: boolean;

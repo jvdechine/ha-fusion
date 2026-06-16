@@ -19,9 +19,14 @@
 
 	$: rawPicture = entity?.attributes?.entity_picture || '';
 
-	// Only route through server-side proxy when hassUrl is configured (direct/reverse-proxy access).
-	// In ingress mode hassUrl is not set and the path resolves correctly against the HA host directly.
-	$: useProxy = rawPicture.startsWith('/api/camera_proxy') && !!$configuration?.hassUrl;
+	// Only route through server-side proxy for direct/reverse-proxy access. In ingress mode the
+	// addon is iframed under /api/hassio_ingress/<token>/, so absolute paths like /_api/... go to
+	// the HA frontend instead of the addon. Falling back to the raw HA path resolves against the
+	// same origin as HA and is authenticated by the token query parameter.
+	$: useProxy =
+		rawPicture.startsWith('/api/camera_proxy') &&
+		!!$configuration?.hassUrl &&
+		!$configuration?.ingress;
 
 	$: entity_picture = useProxy
 		? `${base}/_api/camera_proxy?path=${encodeURIComponent(rawPicture)}`
