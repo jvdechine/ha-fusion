@@ -33,8 +33,9 @@
 
 <style>
 	.container {
-		width: 100%;
-		height: 100%;
+		/* escape the 2rem side padding of the main content area */
+		margin: 0 -2rem;
+		width: calc(100% + 4rem);
 		cursor: pointer;
 	}
 
