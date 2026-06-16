@@ -1,15 +1,38 @@
 <script lang="ts">
 	import { editMode, lang } from '$lib/Stores';
 	import { openModal } from 'svelte-modals';
+	import { onMount } from 'svelte';
 	import Icon from '@iconify/svelte';
 	import type { IframeItem } from '$lib/Types';
 
 	export let sel: IframeItem;
+
+	let container: HTMLDivElement;
+	let availableHeight = 0;
+
+	function updateHeight() {
+		if (container) {
+			availableHeight = window.innerHeight - container.getBoundingClientRect().top;
+		}
+	}
+
+	onMount(() => {
+		updateHeight();
+		window.addEventListener('resize', updateHeight);
+		return () => window.removeEventListener('resize', updateHeight);
+	});
+
+	$: if (sel?.fill_height && container) updateHeight();
+
+	$: iframeHeight = sel?.fill_height
+		? `${availableHeight}px`
+		: sel?.size || '400px';
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
+	bind:this={container}
 	class="container"
 	on:click={() => {
 		if ($editMode) openModal(() => import('$lib/Modal/IframeConfig.svelte'), { sel });
@@ -18,12 +41,12 @@
 	{#if sel?.url}
 		<iframe
 			src={sel.url}
-			style:height={sel?.size || '400px'}
+			style:height={iframeHeight}
 			style:pointer-events={$editMode ? 'none' : 'unset'}
 			title={$lang('iframe')}
 		></iframe>
 	{:else}
-		<div class="placeholder center" style:height={sel?.size || '400px'}>
+		<div class="placeholder center" style:height={iframeHeight}>
 			<div class="icon">
 				<Icon icon="fontisto:world-o" height="none" />
 			</div>
@@ -33,9 +56,7 @@
 
 <style>
 	.container {
-		/* escape the 2rem side padding of the main content area */
-		margin: 0 -2rem;
-		width: calc(100% + 4rem);
+		width: 100%;
 		cursor: pointer;
 	}
 

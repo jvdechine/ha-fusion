@@ -180,12 +180,17 @@
     `;
 	}
 
+	function sectionHasIframe(section: any): boolean {
+		return section?.items?.some((i: any) => i.type === 'iframe') ?? false;
+	}
+
 	function itemStyles(type: string) {
 		const large = ['conditional_media', 'picture_elements', 'camera'];
 		if (type === 'iframe') {
 			return `
 				grid-column: 1 / -1;
 				grid-row: span 1;
+				width: 100%;
 				display: ;
       `;
 		}
@@ -295,6 +300,7 @@
 			id={String(section?.id)}
 			data-is-dnd-shadow-item-hint={section?.[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
 			animate:flip={{ duration: $motion }}
+			class:has-iframe={sectionHasIframe(section)}
 		>
 			<!-- horizontal stack -->
 			{#if section?.type === 'horizontal-stack'}
@@ -392,6 +398,7 @@
 
 				<div
 					class="items"
+					class:has-iframe={sectionHasIframe(section)}
 					data-is-dnd-shadow-item-hint={section?.[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
 					style={sectionStyles(section?.type, $editMode, $motion, empty)}
 					use:dndzone={{
@@ -461,10 +468,15 @@
 		border-radius: 0.65rem;
 	}
 
+	.items.has-iframe {
+		grid-template-columns: 1fr;
+	}
+
 	/* Phone and Tablet (portrait) */
 	@media all and (max-width: 768px) {
 		main {
 			padding: 0 1.25rem 1.25rem 1.25rem;
+			overflow-x: hidden;
 		}
 
 		.horizontal-stack {
@@ -475,6 +487,10 @@
 		.items {
 			display: flex;
 			flex-wrap: wrap;
+		}
+
+		section.has-iframe {
+			margin: 0 -1.25rem;
 		}
 	}
 

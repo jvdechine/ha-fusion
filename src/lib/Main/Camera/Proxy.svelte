@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { editMode, configuration } from '$lib/Stores';
+	import { editMode } from '$lib/Stores';
+	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import Broken from '$lib/Main/Camera/Broken.svelte';
 
@@ -17,10 +18,18 @@
 	let interval: ReturnType<typeof setInterval>;
 
 	$: rawPicture = entity?.attributes?.entity_picture || '';
-	$: entity_picture =
-		rawPicture.startsWith('/') && $configuration?.hassUrl
-			? `${$configuration.hassUrl}${rawPicture}`
-			: rawPicture;
+
+	function proxyUrl(path: string): string {
+		if (path.startsWith('/api/camera_proxy')) {
+			return `${base}/_api/camera_proxy?path=${encodeURIComponent(path)}`;
+		}
+		return path;
+	}
+
+	$: entity_picture = proxyUrl(rawPicture);
+	$: entity_stream_picture = proxyUrl(
+		rawPicture.replace('/api/camera_proxy/', '/api/camera_proxy_stream/')
+	);
 	$: proxy_stream = (!muted || sel?.stream) && !stream_url && !$editMode;
 
 	function handleError(error: boolean) {
@@ -46,7 +55,7 @@
 
 <img
 	src={proxy_stream
-		? entity_picture?.replace('/camera_proxy/', '/camera_proxy_stream/')
+		? entity_stream_picture
 		: entity_picture
 			? `${entity_picture}${date ? '&date=' + date : ''}`
 			: 'about:blank'}

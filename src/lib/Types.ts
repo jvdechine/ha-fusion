@@ -188,6 +188,7 @@ export interface IframeItem {
 	id?: number;
 	url?: string;
 	size?: string;
+	fill_height?: boolean;
 	hide_mobile?: boolean;
 }
 

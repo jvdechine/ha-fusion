@@ -14,6 +14,7 @@
 
 	let url = sel?.url;
 	let size = sel?.size;
+	let fill_height = sel?.fill_height ?? false;
 
 	function set(key: string, event?: any) {
 		sel = updateObj(sel, key, event);
@@ -55,27 +56,53 @@
 			/>
 		</InputClear>
 
-		<h2>{$lang('size')}</h2>
+		<h2>{$lang('height')}</h2>
 
-		<InputClear
-			condition={size}
-			on:clear={() => {
-				size = undefined;
-				set('size');
-			}}
-			let:padding
-		>
-			<input
-				type="text"
-				class="input"
-				bind:value={size}
-				placeholder="150px"
-				on:change={(event) => set('size', event)}
-				autocomplete="off"
-				spellcheck="false"
-				style:padding
-			/>
-		</InputClear>
+		<div class="button-container">
+			<button
+				class:selected={!fill_height}
+				on:click={() => {
+					fill_height = false;
+					set('fill_height', false);
+				}}
+				use:Ripple={$ripple}
+			>
+				{$lang('fixed')}
+			</button>
+
+			<button
+				class:selected={fill_height}
+				on:click={() => {
+					fill_height = true;
+					set('fill_height', true);
+				}}
+				use:Ripple={$ripple}
+			>
+				{$lang('fill')}
+			</button>
+		</div>
+
+		{#if !fill_height}
+			<InputClear
+				condition={size}
+				on:clear={() => {
+					size = undefined;
+					set('size');
+				}}
+				let:padding
+			>
+				<input
+					type="text"
+					class="input"
+					bind:value={size}
+					placeholder="400px"
+					on:change={(event) => set('size', event)}
+					autocomplete="off"
+					spellcheck="false"
+					style:padding
+				/>
+			</InputClear>
+		{/if}
 
 		<h2>{$lang('mobile')}</h2>
 
