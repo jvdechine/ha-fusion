@@ -428,7 +428,10 @@
 
 <style>
 	aside {
-		position: relative;
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		overflow: hidden;
 		grid-area: aside;
 		padding: var(--theme-sidebar-padding);
 		padding-bottom: 1.4rem !important;

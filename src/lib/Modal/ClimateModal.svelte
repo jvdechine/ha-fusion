@@ -4,6 +4,7 @@
 	import WheelPicker from '$lib/Components/WheelPicker.svelte';
 	import Icon from '@iconify/svelte';
 	import ConfigButtons from '$lib/Modal/ConfigButtons.svelte';
+	import ClimateArcThermostat from '$lib/Modal/ClimateArcThermostat.svelte';
 	import { getName, getSupport } from '$lib/Utils';
 	import { callService } from 'home-assistant-js-websocket';
 	import Select from '$lib/Components/Select.svelte';
@@ -107,43 +108,47 @@
 	<Modal>
 		<h1 slot="title">{getName(sel, entity)}</h1>
 
-		{#if attributes?.hvac_modes}
-			<h2>{$lang('hvac_modes')}</h2>
+		{#if sel?.climate_modal_style === 'arc'}
+			<ClimateArcThermostat {entity} />
+		{:else}
+			{#if attributes?.hvac_modes}
+				<h2>{$lang('hvac_modes')}</h2>
 
-			{#if attributes?.hvac_modes?.length <= MAX_ITEMS}
-				<div class="button-container">
-					{#each attributes?.hvac_modes as hvacMode}
-						<button
-							title={$lang(hvacMode)}
-							on:click={() => handleClick('hvac_mode', hvacMode)}
-							class:selected={hvacMode === entity?.state}
-						>
-							<div class="icon">
-								<Icon icon={hvacModesIcons?.[hvacMode]} height="none" />
-							</div>
-						</button>
-					{/each}
-				</div>
-			{:else if optionsHvacModes}
-				<Select
-					options={optionsHvacModes}
-					placeholder={$lang('hvac_modes')}
-					value={entity?.state}
+				{#if attributes?.hvac_modes?.length <= MAX_ITEMS}
+					<div class="button-container">
+						{#each attributes?.hvac_modes as hvacMode}
+							<button
+								title={$lang(hvacMode)}
+								on:click={() => handleClick('hvac_mode', hvacMode)}
+								class:selected={hvacMode === entity?.state}
+							>
+								<div class="icon">
+									<Icon icon={hvacModesIcons?.[hvacMode]} height="none" />
+								</div>
+							</button>
+						{/each}
+					</div>
+				{:else if optionsHvacModes}
+					<Select
+						options={optionsHvacModes}
+						placeholder={$lang('hvac_modes')}
+						value={entity?.state}
+						on:change={(event) => {
+							if (event?.detail === null) return;
+							handleClick('hvac_mode', event?.detail);
+						}}
+					/>
+				{/if}
+			{/if}
+
+			{#if supports?.TARGET_TEMPERATURE}
+				<WheelPicker
+					stateObj={entity}
 					on:change={(event) => {
-						if (event?.detail === null) return;
-						handleClick('hvac_mode', event?.detail);
+						handleClick('temperature', event?.detail);
 					}}
 				/>
 			{/if}
-		{/if}
-
-		{#if supports?.TARGET_TEMPERATURE}
-			<WheelPicker
-				stateObj={entity}
-				on:change={(event) => {
-					handleClick('temperature', event?.detail);
-				}}
-			/>
 		{/if}
 
 		{#if supports?.TARGET_TEMPERATURE_RANGE}
@@ -180,7 +185,7 @@
 			</div>
 		{/if}
 
-		{#if attributes?.fan_modes}
+		{#if attributes?.fan_modes && sel?.climate_modal_style !== 'arc'}
 			<h2>{$lang('fan_modes')}</h2>
 			{#if attributes?.fan_modes?.length <= MAX_ITEMS}
 				<div class="button-container">
@@ -206,7 +211,7 @@
 			{/if}
 		{/if}
 
-		{#if attributes?.swing_modes}
+		{#if attributes?.swing_modes && sel?.climate_modal_style !== 'arc'}
 			<h2>{$lang('swing_modes')}</h2>
 			{#if attributes?.swing_modes?.length <= MAX_ITEMS}
 				<div class="button-container">

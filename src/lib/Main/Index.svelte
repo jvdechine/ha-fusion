@@ -12,6 +12,7 @@
 
 	export let view: any;
 	export let altKeyPressed: boolean;
+	export let hidden = false;
 
 	let currentDraggedElement: HTMLElement | undefined;
 	let dragEnteredAnother = false;
@@ -289,6 +290,7 @@
 </script>
 
 <main
+	style:display={hidden ? 'none' : ''}
 	style:transition="opacity {$motion}ms ease, outline-color {$motion}ms ease"
 	style:opacity={$editMode && view?.sections.length === 0 ? '0' : '1'}
 	use:dndzone={{ ...dndOptions, type: 'section', items: view.sections }}

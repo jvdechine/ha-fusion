@@ -205,11 +205,25 @@
 	{/await}
 
 	<!-- main -->
-	{#if view?.sections}
-		{#await import('$lib/Main/Index.svelte') then Main}
-			<svelte:component this={Main.default} {view} {altKeyPressed} />
-		{/await}
-	{:else if $connection}
+	{#await import('$lib/Main/Index.svelte') then Main}
+		{#if $drawerSearch}
+			{#if view?.sections}
+				<svelte:component this={Main.default} {view} {altKeyPressed} />
+			{/if}
+		{:else}
+			{#each $dashboard?.views ?? [] as v (v.id)}
+				{#if v?.sections}
+					<svelte:component
+						this={Main.default}
+						view={v}
+						{altKeyPressed}
+						hidden={v.id !== $currentViewId}
+					/>
+				{/if}
+			{/each}
+		{/if}
+	{/await}
+	{#if !view?.sections && $connection}
 		{#await import('$lib/Main/Intro.svelte') then Intro}
 			<svelte:component this={Intro.default} {data} />
 		{/await}

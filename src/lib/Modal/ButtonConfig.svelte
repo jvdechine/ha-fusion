@@ -411,6 +411,28 @@
 			</div>
 		{/if}
 
+		{#if getDomain(entity_id) === 'climate'}
+			<h2>Modal</h2>
+
+			<div class="button-container">
+				<button
+					class:selected={!sel?.climate_modal_style || sel?.climate_modal_style === 'classic'}
+					on:click={() => set('climate_modal_style', 'classic')}
+					use:Ripple={$ripple}
+				>
+					Clássico
+				</button>
+
+				<button
+					class:selected={sel?.climate_modal_style === 'arc'}
+					on:click={() => set('climate_modal_style', 'arc')}
+					use:Ripple={$ripple}
+				>
+					Arco
+				</button>
+			</div>
+		{/if}
+
 		<ConfigButtons {sel} />
 	</Modal>
 {/if}

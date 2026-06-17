@@ -89,6 +89,7 @@ export interface ButtonItem {
 	color?: string;
 	marquee?: boolean;
 	more_info?: boolean;
+	climate_modal_style?: 'classic' | 'arc';
 	service?: string;
 	state: any;
 	template?: {
