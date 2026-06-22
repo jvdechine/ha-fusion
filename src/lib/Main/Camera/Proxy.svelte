@@ -79,7 +79,7 @@
 	on:error={() => handleError(true)}
 	on:load={() => handleError(false)}
 	style:display={broken ? 'none' : 'initial'}
-	style:width={responsive ? '100%' : 'calc(14.5rem * 2 + 0.4rem)'}
+	style:width={responsive ? '100%' : 'min(calc(14.5rem * 2 + 0.4rem), 100%)'}
 	style:object-fit={size}
 	draggable="false"
 	style:position={loaderVisible && proxy_stream ? 'absolute' : 'relative'}
