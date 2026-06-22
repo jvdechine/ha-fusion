@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { editMode, configuration } from '$lib/Stores';
 	import { base } from '$app/paths';
-	import { onMount } from 'svelte';
+	import { onMount, getContext } from 'svelte';
+	import type { Writable } from 'svelte/store';
 	import Broken from '$lib/Main/Camera/Broken.svelte';
+
+	const viewHidden = getContext<Writable<boolean> | undefined>('viewHidden');
 
 	export let sel: any;
 	export let entity: any;
@@ -43,15 +46,22 @@
 		broken = error;
 	}
 
-	const updateInterval = 30_000;
+	$: updateInterval = sel?.snapshot_interval
+		? sel.snapshot_interval * 1000
+		: 30_000;
+
+	$: isHidden = viewHidden ? $viewHidden : false;
+
+	$: {
+		clearInterval(interval);
+		if (!isHidden) {
+			interval = setInterval(() => {
+				date = Date.now();
+			}, updateInterval);
+		}
+	}
 
 	onMount(() => {
-		clearInterval(interval);
-		interval = setInterval(() => {
-			date = Date.now();
-		}, updateInterval);
-
-		// cleanup
 		return () => {
 			clearInterval(interval);
 			if (img) img.src = '';

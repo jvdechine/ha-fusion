@@ -185,6 +185,7 @@ export interface CameraItem {
 	entity_id?: string;
 	stream?: boolean;
 	size?: string;
+	snapshot_interval?: number;
 	hide_mobile?: boolean;
 }
 

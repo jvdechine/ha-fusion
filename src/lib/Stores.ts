@@ -1,4 +1,5 @@
 import { writable, readable, derived } from 'svelte/store';
+import { browser } from '$app/environment';
 import type {
 	Configuration,
 	Dashboard,
@@ -140,15 +141,27 @@ export const timer = readable(new Date(), function start(set) {
 	};
 });
 
-// ripple
-export const ripple = readable({
-	color: 'rgba(255, 255, 255, 0.15)',
-	opacity: 0.5,
-	spreadingDuration: '300ms',
-	spreadingTimingFunction: 'ease-in-out',
-	clearingDuration: '350ms',
-	clearingTimingFunction: 'ease-in-out'
-});
+// ripple — disabled on mobile to reduce paint pressure on slow tablets
+const _isMobile = browser && window.matchMedia('(max-width: 768px)').matches;
+export const ripple = readable(
+	_isMobile
+		? {
+				color: 'rgba(0,0,0,0)',
+				opacity: 0,
+				spreadingDuration: '0ms',
+				spreadingTimingFunction: 'ease-in-out',
+				clearingDuration: '0ms',
+				clearingTimingFunction: 'ease-in-out'
+			}
+		: {
+				color: 'rgba(255, 255, 255, 0.15)',
+				opacity: 0.5,
+				spreadingDuration: '300ms',
+				spreadingTimingFunction: 'ease-in-out',
+				clearingDuration: '350ms',
+				clearingTimingFunction: 'ease-in-out'
+			}
+);
 
 // calendar
 export const calendarView = writable<string | null>();

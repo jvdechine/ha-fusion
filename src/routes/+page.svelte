@@ -39,13 +39,6 @@
 	$youtubeAddon = data?.configuration?.addons?.youtube;
 	$currentViewId = $dashboard?.views?.[0]?.id;
 
-	// lazy+persistent: render a view only after first visit, keep it in DOM after
-	let visitedViews = new Set<number | undefined>([$currentViewId]);
-	$: if ($currentViewId) {
-		visitedViews.add($currentViewId);
-		visitedViews = visitedViews;
-	}
-
 	const _motion = data?.configuration?.motion;
 	$motion = _motion === undefined || _motion === true ? $motion : 0;
 
@@ -219,7 +212,7 @@
 			{/if}
 		{:else}
 			{#each $dashboard?.views ?? [] as v (v.id)}
-				{#if v?.sections && visitedViews.has(v.id)}
+				{#if v?.sections}
 					<svelte:component
 						this={Main.default}
 						view={v}

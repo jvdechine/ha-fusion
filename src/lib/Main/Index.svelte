@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { editMode, motion, record, dragging, itemHeight, states, dashboard } from '$lib/Stores';
-	import { onMount, tick } from 'svelte';
+	import { onMount, tick, setContext } from 'svelte';
+	import { writable } from 'svelte/store';
 	import { flip } from 'svelte/animate';
 	import { dndzone, TRIGGERS, SHADOW_ITEM_MARKER_PROPERTY_NAME } from 'svelte-dnd-action';
 	import Content from '$lib/Main/Content.svelte';
@@ -13,6 +14,10 @@
 	export let view: any;
 	export let altKeyPressed: boolean;
 	export let hidden = false;
+
+	const viewHidden = writable(hidden);
+	$: $viewHidden = hidden;
+	setContext('viewHidden', viewHidden);
 
 	let currentDraggedElement: HTMLElement | undefined;
 	let dragEnteredAnother = false;
@@ -443,6 +448,8 @@
 	section {
 		display: grid;
 		align-content: start;
+		content-visibility: auto;
+		contain-intrinsic-size: auto 200px;
 	}
 
 	.horizontal-stack {

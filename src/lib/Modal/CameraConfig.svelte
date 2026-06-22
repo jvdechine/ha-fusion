@@ -77,6 +77,31 @@
 			</button>
 		</div>
 
+		<h2>Atualização do snapshot</h2>
+
+		<div class="button-container">
+			<button
+				class:selected={sel?.snapshot_interval === 5}
+				on:click={() => set('snapshot_interval', 5)}
+				use:Ripple={$ripple}
+			>5s</button>
+			<button
+				class:selected={sel?.snapshot_interval === 10}
+				on:click={() => set('snapshot_interval', 10)}
+				use:Ripple={$ripple}
+			>10s</button>
+			<button
+				class:selected={!sel?.snapshot_interval || sel?.snapshot_interval === 30}
+				on:click={() => set('snapshot_interval')}
+				use:Ripple={$ripple}
+			>30s</button>
+			<button
+				class:selected={sel?.snapshot_interval === 60}
+				on:click={() => set('snapshot_interval', 60)}
+				use:Ripple={$ripple}
+			>60s</button>
+		</div>
+
 		<h2>{$lang('size')}</h2>
 
 		<div class="button-container">
