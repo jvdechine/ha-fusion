@@ -22,6 +22,7 @@
 	import PictureElements from '$lib/Main/PictureElements.svelte';
 	import Iframe from '$lib/Main/Iframe.svelte';
 	import Remote from '$lib/Main/Remote.svelte';
+	import NavigateButton from '$lib/Main/NavigateButton.svelte';
 
 	export let isOpen: boolean;
 	export let sel: any;
@@ -141,6 +142,14 @@
 			props: {
 				sel
 			}
+		},
+		{
+			id: 'navigate_to',
+			type: 'Navegar para aba',
+			component: NavigateButton,
+			props: {
+				sel
+			}
 		}
 	];
 
@@ -191,6 +200,9 @@
 				break;
 			case 'remote_control':
 				openModal(() => import('$lib/Modal/RemoteConfig.svelte'), { sel });
+				break;
+			case 'navigate_to':
+				openModal(() => import('$lib/Modal/NavigateButtonConfig.svelte'), { sel });
 				break;
 			default:
 				openModal(() => import('$lib/Modal/MainItemConfig.svelte'), { sel });

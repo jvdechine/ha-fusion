@@ -7,7 +7,8 @@
 		editMode,
 		viewUnderline,
 		highlightView,
-		draggingView
+		draggingView,
+		ripple
 	} from '$lib/Stores';
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
@@ -16,6 +17,12 @@
 	import { onMount, tick } from 'svelte';
 	import EditViewButton from '$lib/Main/EditViewButton.svelte';
 	import EyeIndicator from '$lib/Main/EyeIndicator.svelte';
+	import Icon from '@iconify/svelte';
+	import Ripple from 'svelte-ripple';
+
+	$: firstView = $dashboard?.views?.[0];
+	$: isOnFirstView = $currentViewId === firstView?.id;
+	$: showBackButton = $dashboard?.hide_views && !isOnFirstView && !$editMode;
 
 	export let view: any;
 
@@ -163,6 +170,19 @@
 			</div>
 		</section>
 	{/if}
+
+	{#if showBackButton}
+		<div class="back-wrap" transition:slide={{ duration: $motion }}>
+			<button
+				class="back-btn"
+				on:click={() => { $currentViewId = firstView?.id; }}
+				use:Ripple={$ripple}
+			>
+				<Icon icon="mdi:arrow-left" height="1rem" />
+				{firstView?.name || 'Início'}
+			</button>
+		</div>
+	{/if}
 </nav>
 
 <style>
@@ -231,6 +251,32 @@
 		bottom: 0rem;
 		height: 3px;
 		background: white;
+	}
+
+	.back-wrap {
+		padding-bottom: 1.25rem;
+	}
+
+	.back-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		background: rgba(255, 255, 255, 0.07);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 2rem;
+		color: rgba(255, 255, 255, 0.75);
+		cursor: pointer;
+		font-family: inherit;
+		font-size: 0.88rem;
+		font-weight: 500;
+		padding: 0.35rem 0.85rem 0.35rem 0.6rem;
+		transition: background 120ms ease, color 120ms ease;
+		overflow: hidden;
+	}
+
+	.back-btn:hover {
+		background: rgba(255, 255, 255, 0.13);
+		color: white;
 	}
 
 	/* Phone and Tablet (portrait) */

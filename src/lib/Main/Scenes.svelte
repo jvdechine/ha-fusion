@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ComputeIcon from '$lib/Components/ComputeIcon.svelte';
 	import Configure from '$lib/Main/Configure.svelte';
-	import { ripple, editMode, states, motion, connection } from '$lib/Stores';
+	import { ripple, editMode, states, motion, connection, currentViewId, dashboard } from '$lib/Stores';
 	import { getName } from '$lib/Utils';
 	import Icon, { loadIcon } from '@iconify/svelte';
 	import { onDestroy } from 'svelte';
@@ -17,6 +17,21 @@
 	const iconSize = '2rem';
 
 	$: icon = sel?.icon;
+
+	// navigate_to
+	$: targetView = sel?.type === 'navigate_to'
+		? $dashboard?.views?.find((v) => v.id === sel?.navigate_to)
+		: undefined;
+	$: navIcon = sel?.icon || targetView?.icon || 'mdi:arrow-right-circle';
+	$: navName = sel?.name || targetView?.name || 'Navegar';
+
+	function handleNavigateClick() {
+		if ($editMode) {
+			openModal(() => import('$lib/Modal/NavigateButtonConfig.svelte'), { sel });
+		} else if (sel?.navigate_to != null) {
+			$currentViewId = sel.navigate_to;
+		}
+	}
 
 	function handleClick() {
 		// config
@@ -47,6 +62,27 @@
 
 {#if sel?.type === 'configure'}
 	<Configure {sel} />
+{:else if sel?.type === 'navigate_to'}
+	<div
+		class="btn"
+		on:click={handleNavigateClick}
+		style:cursor={$editMode ? 'unset' : 'pointer'}
+		use:Ripple={{
+			...$ripple,
+			color: !$editMode ? 'rgba(0, 0, 0, 0.35)' : 'rgba(0, 0, 0, 0)'
+		}}
+	>
+		<div class="icon nav-icon" style:--nav-icon-color={sel?.color || undefined}>
+			{#await loadIcon(navIcon)}
+				<Icon icon="mdi:arrow-right-circle" style="font-size: {iconSize}" />
+			{:then resolvedIcon}
+				<Icon icon={resolvedIcon} style="font-size: {iconSize}" />
+			{:catch}
+				<Icon icon="mdi:arrow-right-circle" style="font-size: {iconSize}" />
+			{/await}
+		</div>
+		<div class="name">{navName}</div>
+	</div>
 {:else}
 	<div
 		class:active={active && !$editMode}
@@ -126,5 +162,9 @@
 
 	.active {
 		background-color: rgba(0, 0, 0, 0.35);
+	}
+
+	.nav-icon {
+		color: var(--nav-icon-color, var(--theme-button-background-color-on));
 	}
 </style>

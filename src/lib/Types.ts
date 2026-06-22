@@ -161,6 +161,15 @@ export interface RemoteControlItem {
 	remote_buttons?: RemoteButton[];
 }
 
+export interface NavigateButtonItem {
+	type?: string;
+	id?: number;
+	name?: string;
+	icon?: string;
+	color?: string;
+	navigate_to?: number;
+}
+
 export interface BarItem {
 	type?: string;
 	id?: number;
