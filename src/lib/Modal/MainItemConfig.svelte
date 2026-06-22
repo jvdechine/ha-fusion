@@ -21,6 +21,7 @@
 	import Ripple from 'svelte-ripple';
 	import PictureElements from '$lib/Main/PictureElements.svelte';
 	import Iframe from '$lib/Main/Iframe.svelte';
+	import Remote from '$lib/Main/Remote.svelte';
 
 	export let isOpen: boolean;
 	export let sel: any;
@@ -132,6 +133,14 @@
 			props: {
 				sel
 			}
+		},
+		{
+			id: 'remote_control',
+			type: 'Remote Control',
+			component: Remote,
+			props: {
+				sel
+			}
 		}
 	];
 
@@ -179,6 +188,9 @@
 				break;
 			case 'iframe':
 				openModal(() => import('$lib/Modal/IframeConfig.svelte'), { sel });
+				break;
+			case 'remote_control':
+				openModal(() => import('$lib/Modal/RemoteConfig.svelte'), { sel });
 				break;
 			default:
 				openModal(() => import('$lib/Modal/MainItemConfig.svelte'), { sel });

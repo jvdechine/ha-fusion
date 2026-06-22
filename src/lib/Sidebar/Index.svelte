@@ -439,6 +439,14 @@
 		border-right: var(--theme-colors-sidebar-border);
 	}
 
+	@media (max-width: 768px) {
+		aside {
+			position: static;
+			height: auto;
+			overflow: visible;
+		}
+	}
+
 	div {
 		width: 100%;
 	}

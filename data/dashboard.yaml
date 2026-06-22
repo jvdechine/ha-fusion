@@ -4,29 +4,6 @@ views:
     sections:
       - name: Casa
         items:
-          - id: 7312047574078
-            type: button
-            entity_id: cover.portao_garagem_door
-            name: Portão
-            template:
-              state: |-
-                {% if is_state(entity_id, "closed") %}
-                  Fechado
-                {% else %}
-                  Aberto
-                {% endif %}
-            more_info: false
-          - id: 9821487501683
-            type: button
-            entity_id: alarm_control_panel.home_alarm
-            template:
-              color: >-
-                {% if is_state(entity_id, "armed_away") or is_state(entity_id,
-                "armed_home") %}
-                  green
-                {% else %}
-                  darkred
-                {% endif %}
           - id: 8822081298024
             type: button
             entity_id: sensor.quantidade_luzes_ligadas
@@ -48,6 +25,37 @@ views:
             name: Desligar todas as luzes
             more_info: false
         id: 2083423904824
+      - name: Garagem
+        items:
+          - id: 7312047574078
+            type: button
+            entity_id: cover.portao_garagem_door
+            name: Portão
+            template:
+              state: |-
+                {% if is_state(entity_id, "closed") %}
+                  Fechado
+                {% else %}
+                  Aberto
+                {% endif %}
+            more_info: false
+          - id: 5845961650250
+            type: button
+            entity_id: light.interruptor_garagem_switch_1
+            template:
+              state: |-
+                {% if is_state(entity_id, "on") %}
+                  Ligada
+                {% else %}
+                  Desligada
+                {% endif %}
+              color: |-
+                {% if is_state(entity_id, "on") %}
+                  #CC7722
+                {% endif %}
+            icon: material-symbols-light:lightbulb-rounded
+            more_info: false
+        id: 7254771425925
       - type: horizontal-stack
         sections:
           - name: Sala
@@ -97,7 +105,7 @@ views:
             items:
               - id: 8607889404389
                 type: button
-                entity_id: switch.interruptor_cozinha_porta_switch_1
+                entity_id: light.interruptor_cozinha_porta_switch_1
                 name: Luz
                 template:
                   state: |-
@@ -114,7 +122,7 @@ views:
                 more_info: false
               - id: 5302394006652
                 type: button
-                entity_id: switch.interruptor_cozinha_porta_switch_3
+                entity_id: light.interruptor_cozinha_porta_switch_3
                 name: Pendentes
                 template:
                   state: |-
@@ -186,6 +194,21 @@ views:
                       #CC7722
                     {% endif %}
                 more_info: false
+              - id: 2111736136845
+                type: button
+                entity_id: light.interruptor_quarto_closet_switch_1
+                more_info: false
+                template:
+                  color: |-
+                    {% if is_state(entity_id, "on") %}
+                      #CC7722
+                    {% endif %}
+                  state: |-
+                    {% if is_state(entity_id, "on") %}
+                      Ligada
+                    {% else %}
+                      Desligada
+                    {% endif %}
             id: 5198099138979
         id: 5765705923416
   - name: Sala
@@ -195,20 +218,125 @@ views:
         sections:
           - name: TV
             items:
-              - id: 8154824220734
-                type: button
-                entity_id: media_player.tv
-                name: TV
-                template:
-                  state: |-
-                    {% if is_state(entity_id, "on") %}
-                      Ligada - Volume: {{ int(state_attr(entity_id, "volume_level") * 100) }}
-                    {% else %}
-                      Desligada
-                    {% endif %}
-                icon: material-symbols:tv
-                marquee: false
-                more_info: false
+              - id: 8838149524393
+                type: remote_control
+                name: TV Sala
+                entity_id: media_player.sala_de_estar_tv_sala
+                remote_buttons:
+                  - id: 1
+                    large: true
+                    label: Power
+                    icon: mdi:power
+                    color: '#c0392b'
+                    service: media_player.toggle
+                  - id: 2
+                    label: Guide
+                    icon: mdi:television-guide
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_GUIDE"}
+                  - id: 3
+                    label: HDMI
+                    icon: mdi:hdmi-port
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_HDMI"}
+                  - id: 4
+                    label: Info
+                    icon: mdi:information-outline
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_INFO"}
+                  - id: 5
+                    spacer: true
+                  - id: 6
+                    circle: true
+                    icon: mdi:chevron-up
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_UP"}
+                  - id: 7
+                    spacer: true
+                  - id: 8
+                    circle: true
+                    icon: mdi:chevron-left
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_LEFT"}
+                  - id: 9
+                    circle: true
+                    label: OK
+                    color: rgba(255,255,255,0.14)
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_ENTER"}
+                  - id: 10
+                    circle: true
+                    icon: mdi:chevron-right
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_RIGHT"}
+                  - id: 11
+                    spacer: true
+                  - id: 12
+                    circle: true
+                    icon: mdi:chevron-down
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_DOWN"}
+                  - id: 13
+                    spacer: true
+                  - id: 14
+                    label: Vol+
+                    icon: mdi:volume-plus
+                    service: media_player.volume_up
+                  - id: 15
+                    label: Back
+                    icon: mdi:arrow-u-left-top
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_RETURN"}
+                  - id: 16
+                    label: Ch+
+                    icon: mdi:plus
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_CHUP"}
+                  - id: 17
+                    label: Vol-
+                    icon: mdi:volume-minus
+                    service: media_player.volume_down
+                  - id: 18
+                    label: Home
+                    icon: mdi:home
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_HOME"}
+                  - id: 19
+                    label: Ch-
+                    icon: mdi:minus
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"send_key","media_content_id":"KEY_CHDOWN"}
+                  - id: 20
+                    icon: mdi:skip-previous
+                    service: media_player.media_previous_track
+                  - id: 21
+                    icon: mdi:play-pause
+                    service: media_player.media_play_pause
+                  - id: 22
+                    icon: mdi:skip-next
+                    service: media_player.media_next_track
+                  - id: 23
+                    label: Youtube
+                    icon: mdi:youtube
+                    color: '#FF0000'
+                    service: media_player.play_media
+                    service_data: >-
+                      {"media_content_type":"app","media_content_id":"111299001912"}
+                color: >-
+                  {% if is_state(entity_id, "on") %}   #CC7722 {% else %}  
+                  #2C3031 {% endif %}
               - id: 5942997885166
                 type: button
                 entity_id: script.ligar_tv_sala_youtube
@@ -255,61 +383,8 @@ views:
                     {% endif %}
                 name: Limpar
                 icon: solar:smart-vacuum-cleaner-bold
-            id: 2163604360341
-        id: 4561243997355
-      - type: horizontal-stack
-        sections:
-          - name: Música
-            items:
-              - id: 9138276284880
-                type: button
-                entity_id: script.tocar_musica
-                name: POP
-                state: Clique para tocar
-                icon: mage:music-fill
-                template:
-                  service: |-
-                    service: script.tocar_musica
-                    data: {
-                      entity_id: media_player.sala_de_estar,
-                      style: "Mix: POP"
-                    }
-                more_info: false
-              - id: 8157990971092
-                type: button
-                entity_id: script.tocar_musica
-                name: Eletrônica
-                state: Clique para tocar
-                icon: mage:music-fill
-                template:
-                  service: |-
-                    service: script.tocar_musica
-                    data: {
-                      entity_id: media_player.sala_de_estar,
-                      style: "Eletrônicas 2025"
-                    }
-                more_info: false
-            id: 4055077960794
-          - name: Tocando agora
-            items:
-              - id: 7086022075407
-                type: conditional_media
-                entity_id: media_player.sala_de_estar
-                media_players:
-                  - entity_id: media_player.sala_de_estar
-                show_timeout: true
-                more_info: true
-            id: 8407741718510
-            visibility:
-              - condition: or
-                conditions:
-                  - condition: state
-                    entity: media_player.sala_de_estar
-                    state: paused
-                  - condition: state
-                    entity: media_player.sala_de_estar
-                    state: playing
-        id: 5408788605527
+            id: 9103161542900
+        id: 2308094880711
       - name: Ar Condicionado
         items:
           - id: 1710806085996
@@ -324,8 +399,45 @@ views:
                   {{ states(entity_id) }}
                 {% endif %}
             icon: akar-icons:air
+            climate_modal_style: arc
         id: 4391313162843
+  - name: Escritório
+    id: 3128660750040
+    sections:
+      - name: Ar Condicionado
+        items:
+          - id: 3450707667975
+            type: button
+            entity_id: climate.ar_condicionado_escritorio
+            name: Ar Condicionado
+            climate_modal_style: arc
+        id: 1737663756423
+  - name: Câmeras
+    id: 1605570823566
+    sections:
+      - name: ''
+        items:
+          - id: 9857124877775
+            type: camera
+            entity_id: camera.urn_uuid_322ceb9c_2aae_1a54_8f9c_7d7965126a9c_profile_0
+            stream: true
+        id: 2694859867906
+  - name: Mídias
+    id: 2659989123773
+    sections:
+      - name: ''
+        items:
+          - id: 8031115569905
+            type: iframe
+            url: >-
+              https://ma.local.familiadechine.com.br/?code=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxQTRQcm9ZckVfLUJPZkhrbWxkZ2Ztd0NDc1cxdDVPRm43cXdfRnJUc3MwIiwianRpIjoiQzV4VTZSVFhtRmtjVTlVQk9CV1ZZRFk4T05SY1pPTGh4V3ZkWEc5c1hVYyIsImlhdCI6MTc4MTU1NDgzMywiZXhwIjoyMDk2OTE0ODMzLCJ1c2VybmFtZSI6ImRlY2hpbmVqdiIsInJvbGUiOiJhZG1pbiIsInRva2VuX25hbWUiOiJGdXNpb24iLCJpc19sb25nX2xpdmVkIjp0cnVlfQ.uMbrtHbNtlgz1FFxFXIXDfBQRkTc5Uxx-ReYtmAaajw#/home/?player=nest_sala
+            size: 700px
+            fill_height: true
+        id: 9278649180154
 sidebar:
+  - id: 2237525986208
+    type: notifications
+    hide_mobile: true
   - id: 4213334394144
     type: time
     hide_mobile: true

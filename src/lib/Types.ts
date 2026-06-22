@@ -139,6 +139,28 @@ export type SidebarItem = BarItem &
 	WeatherForecastItem &
 	DividerItem;
 
+export interface RemoteButton {
+	id: number;
+	spacer?: boolean;
+	large?: boolean;
+	circle?: boolean;
+	label?: string;
+	icon?: string;
+	color?: string;
+	service?: string;
+	service_data?: string;
+}
+
+export interface RemoteControlItem {
+	type?: string;
+	id?: number;
+	name?: string;
+	icon?: string;
+	color?: string;
+	entity_id?: string;
+	remote_buttons?: RemoteButton[];
+}
+
 export interface BarItem {
 	type?: string;
 	id?: number;
