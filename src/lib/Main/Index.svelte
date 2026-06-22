@@ -507,4 +507,10 @@
 	.scenes > .divider {
 		border-right: 1px solid transparent;
 	}
+
+	@media (max-width: 768px) {
+		.scenes {
+			grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+		}
+	}
 </style>
