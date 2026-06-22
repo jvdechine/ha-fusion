@@ -9,6 +9,7 @@
 	import Iframe from '$lib/Main/Iframe.svelte';
 	import Remote from '$lib/Main/Remote.svelte';
 	import NavigateButton from '$lib/Main/NavigateButton.svelte';
+	import Title from '$lib/Main/Title.svelte';
 
 	export let item: any;
 	export let sectionName: string | undefined = undefined;
@@ -38,6 +39,8 @@
 	<Remote sel={item} />
 {:else if item?.type === 'navigate_to'}
 	<NavigateButton sel={item} />
+{:else if item?.type === 'title'}
+	<Title sel={item} />
 {:else}
 	<!-- if types are changed internally, don't break ui -->
 	<Configure sel={{ id: item?.id }} />

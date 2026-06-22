@@ -23,6 +23,7 @@
 	import Iframe from '$lib/Main/Iframe.svelte';
 	import Remote from '$lib/Main/Remote.svelte';
 	import NavigateButton from '$lib/Main/NavigateButton.svelte';
+	import Title from '$lib/Main/Title.svelte';
 
 	export let isOpen: boolean;
 	export let sel: any;
@@ -150,6 +151,14 @@
 			props: {
 				sel
 			}
+		},
+		{
+			id: 'title',
+			type: 'Título',
+			component: Title,
+			props: {
+				sel
+			}
 		}
 	];
 
@@ -203,6 +212,9 @@
 				break;
 			case 'navigate_to':
 				openModal(() => import('$lib/Modal/NavigateButtonConfig.svelte'), { sel });
+				break;
+			case 'title':
+				openModal(() => import('$lib/Modal/TitleConfig.svelte'), { sel });
 				break;
 			default:
 				openModal(() => import('$lib/Modal/MainItemConfig.svelte'), { sel });

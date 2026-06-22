@@ -192,6 +192,9 @@
 
 	function itemStyles(type: string) {
 		const large = ['conditional_media', 'picture_elements', 'camera'];
+		if (type === 'title') {
+			return `grid-column: 1 / -1; width: 100%;`;
+		}
 		if (type === 'iframe') {
 			return `
 				grid-column: 1 / -1;

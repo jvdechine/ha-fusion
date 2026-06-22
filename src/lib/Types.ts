@@ -170,6 +170,15 @@ export interface NavigateButtonItem {
 	navigate_to?: number;
 }
 
+export interface TitleItem {
+	type?: string;
+	id?: number;
+	name?: string;
+	size?: 'small' | 'medium' | 'large';
+	align?: 'left' | 'center' | 'right';
+	color?: string;
+}
+
 export interface BarItem {
 	type?: string;
 	id?: number;
