@@ -433,6 +433,28 @@
 			</div>
 		{/if}
 
+		{#if getDomain(entity_id) === 'timer'}
+			<h2>Countdown no botão</h2>
+
+			<div class="button-container">
+				<button
+					class:selected={!sel?.show_timer}
+					on:click={() => set('show_timer', false)}
+					use:Ripple={$ripple}
+				>
+					{$lang('no')}
+				</button>
+
+				<button
+					class:selected={sel?.show_timer}
+					on:click={() => set('show_timer', true)}
+					use:Ripple={$ripple}
+				>
+					{$lang('yes')}
+				</button>
+			</div>
+		{/if}
+
 		<ConfigButtons {sel} />
 	</Modal>
 {/if}

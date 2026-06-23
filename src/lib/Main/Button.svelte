@@ -44,6 +44,11 @@
 	let resetLoading: ReturnType<typeof setTimeout> | null;
 	let stateOn: boolean;
 
+	// timer countdown
+	let timerInterval: ReturnType<typeof setInterval>;
+	let timerDisplayTime: string;
+	let _timerNow = new Date();
+
 	/** display loader if no state change has occurred within `$motion`ms */
 	let delayLoading: ReturnType<typeof setTimeout> | null;
 
@@ -97,6 +102,53 @@
 		// default
 		stateOn = $onStates?.includes(entity?.state?.toLocaleLowerCase());
 	}
+
+	$: isTimerButton = getDomain(entity_id) === 'timer' && !!sel?.show_timer;
+	$: _timerFinishesAt = isTimerButton ? entity?.attributes?.finishes_at : undefined;
+	$: _timerEnd = _timerFinishesAt ? new Date(_timerFinishesAt) : undefined;
+	$: _timerState = isTimerButton ? entity?.state : undefined;
+
+	$: {
+		clearInterval(timerInterval);
+		if (isTimerButton && _timerEnd) {
+			_timerTickNow();
+			timerInterval = setInterval(_timerTickNow, 1000);
+		}
+	}
+
+	function _timerTickNow() {
+		_timerNow.setTime(Date.now());
+		const diff = _timerEnd!.getTime() - _timerNow.getTime();
+		if (diff > 0) timerDisplayTime = _timerCalc(diff);
+	}
+
+	function _timerCalc(ms: number): string {
+		const h = Math.floor(ms / (1000 * 60 * 60));
+		const m = Math.floor((ms / (1000 * 60)) % 60);
+		const s = Math.floor((ms / 1000) % 60);
+		return h
+			? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+			: `${m}:${String(s).padStart(2, '0')}`;
+	}
+
+	function _timerParseDuration(d: string): string {
+		const parts = d.split(':').map(Number);
+		while (parts.length < 3) parts.unshift(0);
+		const [h, m, s] = parts;
+		return h
+			? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+			: `${m}:${String(s).padStart(2, '0')}`;
+	}
+
+	$: timerDisplay = !isTimerButton
+		? undefined
+		: _timerState === 'active'
+			? timerDisplayTime || '--:--'
+			: _timerState === 'paused' && entity?.attributes?.remaining
+				? _timerParseDuration(entity.attributes.remaining)
+				: entity?.attributes?.duration
+					? _timerParseDuration(entity.attributes.duration)
+					: '--:--';
 
 	/**
 	 * Toggles the state of the specified entity
@@ -444,7 +496,10 @@
 		}
 	}
 
-	onDestroy(() => unsubscribe?.());
+	onDestroy(() => {
+		unsubscribe?.();
+		clearInterval(timerInterval);
+	});
 </script>
 
 <div
@@ -528,8 +583,19 @@
 		<!-- STATE -->
 
 		<!-- only bind clientWidth if marquee is set and use svelte-fast-dimension -->
-		<div class="state" data-state={stateOn}>
-			{#if marquee}
+		<div
+			class="state"
+			data-state={stateOn}
+			class:timer-display={isTimerButton}
+			style:color={isTimerButton && _timerState === 'active'
+				? stateOn
+					? '#B45309'
+					: 'orange'
+				: undefined}
+		>
+			{#if timerDisplay}
+				{timerDisplay}
+			{:else if marquee}
 				<div style="width: min-content;" bind:clientWidth={contentWidth}>
 					{#if sel?.state || (sel?.template?.state && template?.state?.output)}
 						{@html sel?.state || template?.state?.output}
@@ -647,6 +713,13 @@
 
 	.state[data-state='true'] {
 		color: var(--theme-button-state-color-on);
+	}
+
+	.timer-display {
+		font-size: 1.15rem;
+		font-weight: 500;
+		font-variant-numeric: tabular-nums;
+		letter-spacing: -0.02em;
 	}
 
 	/* Phone and Tablet (portrait) */
