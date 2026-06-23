@@ -265,7 +265,7 @@
 			'header header'
 			'aside nav'
 			'aside main';
-		min-height: 100vh;
+		height: 100vh;
 		overflow: hidden;
 		overscroll-behavior: contain;
 	}
@@ -278,6 +278,7 @@
 				'aside aside'
 				'nav nav'
 				'main main';
+			height: auto;
 			min-height: 100vh;
 			overflow: hidden;
 			grid-template-rows: auto auto auto 1fr !important;

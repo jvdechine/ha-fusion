@@ -446,6 +446,7 @@
 		gap: 1.5rem;
 		outline: transparent;
 		align-content: start;
+		overflow-y: auto;
 	}
 
 	section {
