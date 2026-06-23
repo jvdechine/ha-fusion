@@ -19,6 +19,7 @@
 	let SectionButton: ComponentType;
 	let HorizontalStackButton: ComponentType;
 	let ScenesButton: ComponentType;
+	let ChipsButton: ComponentType;
 	let ViewButton: ComponentType;
 
 	onMount(async () => {
@@ -27,6 +28,7 @@
 		SectionButton = (await import('$lib/Drawer/SectionButton.svelte')).default;
 		HorizontalStackButton = (await import('$lib/Drawer/HorizontalStackButton.svelte')).default;
 		ScenesButton = (await import('$lib/Drawer/ScenesButton.svelte')).default;
+		ChipsButton = (await import('$lib/Drawer/ChipsButton.svelte')).default;
 		ViewButton = (await import('$lib/Drawer/ViewButton.svelte')).default;
 	});
 
@@ -88,6 +90,8 @@
 			<svelte:component this={HorizontalStackButton} {view} on:clicked={handleClick} />
 
 			<svelte:component this={ScenesButton} {view} on:clicked={handleClick} />
+
+			<svelte:component this={ChipsButton} {view} on:clicked={handleClick} />
 
 			<svelte:component this={ViewButton} on:clicked={handleClick} />
 		</div>

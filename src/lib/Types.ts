@@ -181,6 +181,15 @@ export interface TitleItem {
 	color?: string;
 }
 
+export interface ChipItem {
+	type?: string;
+	id?: number;
+	entity_id?: string;
+	name?: string;
+	icon?: string;
+	color?: string;
+}
+
 export interface BarItem {
 	type?: string;
 	id?: number;

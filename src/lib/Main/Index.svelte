@@ -400,7 +400,38 @@
 					{/each}
 				</div>
 
-				<!-- normal -->
+				<!-- chips -->
+			{:else if section?.type === 'chips'}
+				{@const empty = $editMode && !section?.items?.length}
+				<SectionHeader {view} {section} />
+				<div
+					class="chips-row"
+					style:outline="2px dashed {$editMode ? '#ffc008' : 'transparent'}"
+					style:background-color={empty ? 'rgba(255, 190, 10, 0.25)' : 'transparent'}
+					style:transition="background-color {$motion / 2}ms ease"
+					data-is-dnd-shadow-item-hint={section?.[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
+					use:dndzone={{
+						...dndOptions,
+						type: 'item',
+						items: section.items,
+						transformDraggedElement: transformScenesElement
+					}}
+					on:consider={(event) => dragItem(section.id, event)}
+					on:finalize={(event) => dragItem(section.id, event)}
+				>
+					{#each section?.items as item (item.id)}
+						<div
+							id={item?.id}
+							data-is-dnd-shadow-item-hint={item?.[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
+							animate:flip={{ duration: $motion }}
+							tabindex="-1"
+						>
+							<Content {item} />
+						</div>
+					{/each}
+				</div>
+
+			<!-- normal -->
 			{:else}
 				{@const empty = $editMode && !section?.items?.length}
 
@@ -505,6 +536,14 @@
 		section.has-iframe {
 			margin: 0 -1.25rem;
 		}
+	}
+
+	.chips-row {
+		display: flex;
+		flex-wrap: wrap;
+		border-radius: 0.65rem;
+		outline-offset: -2px;
+		height: 45px;
 	}
 
 	.scenes {

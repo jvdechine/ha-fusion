@@ -10,6 +10,7 @@
 	import Remote from '$lib/Main/Remote.svelte';
 	import NavigateButton from '$lib/Main/NavigateButton.svelte';
 	import Title from '$lib/Main/Title.svelte';
+	import Chip from '$lib/Main/Chip.svelte';
 
 	export let item: any;
 	export let sectionName: string | undefined = undefined;
@@ -41,6 +42,8 @@
 	<NavigateButton sel={item} />
 {:else if item?.type === 'title'}
 	<Title sel={item} />
+{:else if item?.type === 'chip'}
+	<Chip sel={item} />
 {:else}
 	<!-- if types are changed internally, don't break ui -->
 	<Configure sel={{ id: item?.id }} />
