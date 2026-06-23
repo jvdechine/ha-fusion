@@ -29,7 +29,6 @@
 		font-weight: 500;
 		line-height: 2.8rem;
 		font-size: var(--theme-sizes-sidebar-time);
-		text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -39,10 +38,10 @@
 	.collapsed {
 		padding: 0.3rem 0;
 		text-align: center;
-		font-size: 0.82rem;
-		line-height: 1.6rem;
+		font-size: 1.05rem;
+		line-height: 1.8rem;
 		margin-left: 0;
-		letter-spacing: -0.03em;
+		letter-spacing: -0.02em;
 		width: 100%;
 		overflow: visible;
 		text-overflow: clip;

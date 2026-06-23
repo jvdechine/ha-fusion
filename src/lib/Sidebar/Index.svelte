@@ -489,6 +489,7 @@
 		cursor: inherit;
 		font-size: inherit;
 		width: 100%;
+		touch-action: manipulation;
 	}
 
 	.collapse-btn {

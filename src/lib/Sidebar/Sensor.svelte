@@ -59,11 +59,8 @@
 		grid-template-rows: 0fr;
 		overflow: hidden;
 		pointer-events: none;
-		text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-
 		/* need to specify to properly show emoji */
 		font-family: 'Inter Variable';
-		text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 		padding: var(--theme-sidebar-item-padding);
 	}
 

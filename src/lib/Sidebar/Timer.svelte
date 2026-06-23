@@ -177,7 +177,6 @@
 
 	.container {
 		display: flex;
-		text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 		border-radius: 0.65rem;
 		margin-left: -0.6rem;
 		margin-right: -0.6rem;

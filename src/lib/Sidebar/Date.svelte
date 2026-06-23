@@ -75,17 +75,15 @@
 
 	.day-num {
 		font-weight: 600;
-		font-size: 1.15rem;
-		text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+		font-size: 1.45rem;
 		white-space: nowrap;
 	}
 
 	.month-abbr {
-		font-size: 0.68rem;
+		font-size: 0.8rem;
 		opacity: 0.7;
 		text-transform: uppercase;
 		letter-spacing: 0.06em;
-		text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 		white-space: nowrap;
 	}
 </style>

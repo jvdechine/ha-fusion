@@ -196,10 +196,10 @@
 	style:grid-template-columns="{$dashboard?.hide_sidebar || !$dashboard?.sidebar?.length
 		? '0'
 		: $dashboard?.sidebarCollapsed
-			? 72
+			? 96
 			: $dashboard?.sidebarWidth || 350}px auto"
 	style:grid-template-rows={$showDrawer ? 'auto auto 1fr' : '0fr auto 1fr'}
-	style:transition="grid-template-rows {$motion}ms ease, grid-template-columns {$motion}ms ease"
+	style:transition="grid-template-rows {$motion}ms ease"
 >
 	<!-- nav -->
 	{#await import('$lib/Main/Views.svelte') then Views}

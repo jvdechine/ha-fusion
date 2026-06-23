@@ -633,10 +633,8 @@
 		grid-auto-flow: row;
 		grid-template-areas: 'left right';
 		--container-padding: 0.72rem;
-
-		/* fix ripple */
-		transform: translateZ(0);
 		overflow: hidden;
+		touch-action: manipulation;
 	}
 
 	.image {

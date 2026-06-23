@@ -154,7 +154,6 @@
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 	}
 
 	.content {
@@ -173,10 +172,10 @@
 		text-align: start;
 		border: none;
 		margin-left: -0.6rem;
-		text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 		background-color: transparent;
 		z-index: 1;
 		font-family: inherit;
+		touch-action: manipulation;
 	}
 
 	.collapsed-nav {
