@@ -12,7 +12,9 @@
 
 	function updateHeight() {
 		if (container) {
-			availableHeight = window.innerHeight - container.getBoundingClientRect().top;
+			const main = container.closest('main');
+			const mainPb = main ? parseFloat(getComputedStyle(main).paddingBottom) : 0;
+			availableHeight = window.innerHeight - container.getBoundingClientRect().top - mainPb;
 		}
 	}
 
