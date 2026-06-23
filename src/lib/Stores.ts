@@ -141,10 +141,10 @@ export const timer = readable(new Date(), function start(set) {
 	};
 });
 
-// ripple — disabled on mobile to reduce paint pressure on slow tablets
-const _isMobile = browser && window.matchMedia('(max-width: 768px)').matches;
+// ripple — disabled on all touch devices (pointer: coarse) to reduce GPU pressure
+const _isTouch = browser && window.matchMedia('(pointer: coarse)').matches;
 export const ripple = readable(
-	_isMobile
+	_isTouch
 		? {
 				color: 'rgba(0,0,0,0)',
 				opacity: 0,

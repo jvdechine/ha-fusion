@@ -70,6 +70,7 @@
 </script>
 
 <img
+	loading="lazy"
 	src={proxy_stream
 		? entity_stream_picture
 		: entity_picture

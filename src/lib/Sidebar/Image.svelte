@@ -8,9 +8,9 @@
 </script>
 
 {#if url}
-	<img src={url} alt="url" />
+	<img src={url} alt="url" loading="lazy" />
 {:else if src}
-	<img {src} alt={entity_id} />
+	<img {src} alt={entity_id} loading="lazy" />
 {:else}
 	{$lang('picture')}
 {/if}

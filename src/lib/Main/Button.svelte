@@ -635,6 +635,7 @@
 		--container-padding: 0.72rem;
 		overflow: hidden;
 		touch-action: manipulation;
+		contain: layout style;
 	}
 
 	.image {

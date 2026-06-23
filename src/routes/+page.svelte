@@ -267,6 +267,7 @@
 			'aside main';
 		min-height: 100vh;
 		overflow: hidden;
+		overscroll-behavior: contain;
 	}
 
 	@media (max-width: 768px) {
