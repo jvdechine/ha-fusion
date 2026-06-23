@@ -1,7 +1,7 @@
 <script lang="ts">
 	// store
 	import { dashboard, motion, showDrawer, editMode, record, dragging } from '$lib/Stores';
-	import { onMount, tick } from 'svelte';
+	import { onMount, tick, setContext } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME, TRIGGERS } from 'svelte-dnd-action';
 	import { openModal } from 'svelte-modals';
@@ -9,8 +9,21 @@
 	import type { SidebarItem } from '$lib/Types';
 	import '$lib/Sidebar/Sidebar.css';
 	import type { ComponentType } from 'svelte';
+	import { writable } from 'svelte/store';
+	import Icon from '@iconify/svelte';
 
 	export let altKeyPressed: boolean;
+
+	const collapsedStore = writable($dashboard?.sidebarCollapsed ?? false);
+	$: $collapsedStore = $dashboard?.sidebarCollapsed ?? false;
+	setContext('sidebarCollapsed', collapsedStore);
+
+	function toggleCollapse() {
+		if (!$dashboard) return;
+		$dashboard.sidebarCollapsed = !$dashboard.sidebarCollapsed;
+		$dashboard = $dashboard;
+		$record();
+	}
 
 	let skipTransformElement = false;
 	let importedComponents: (string | undefined)[] = [];
@@ -222,7 +235,9 @@
 <aside
 	style:padding={$dashboard.hide_sidebar || $dashboard.sidebar.length === 0
 		? '0px'
-		: 'var(--theme-sidebar-padding)'}
+		: $dashboard?.sidebarCollapsed
+			? '0.6rem 0.35rem'
+			: 'var(--theme-sidebar-padding)'}
 	style:transition="padding {$motion}ms ease"
 >
 	{#if $editMode}
@@ -232,6 +247,17 @@
 	{/if}
 
 	{#if !$dashboard?.hide_sidebar}
+		<button
+			class="collapse-btn"
+			class:is-collapsed={$collapsedStore}
+			on:click={toggleCollapse}
+			title={$collapsedStore ? 'Expandir' : 'Minimizar'}
+		>
+			<span class="collapse-icon">
+				<Icon icon={$collapsedStore ? 'mdi:chevron-right' : 'mdi:chevron-left'} width="20" />
+			</span>
+		</button>
+
 		<section
 			use:dndzone={{
 				type: 'sidebar',
@@ -263,7 +289,7 @@
 						: 'initial'}
 				>
 					<!-- BAR -->
-					{#if Bar && item?.type === 'bar' && !hide_mobile}
+					{#if Bar && item?.type === 'bar' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)}>
 							<svelte:component
 								this={Bar}
@@ -275,13 +301,13 @@
 						</button>
 
 						<!-- CAMERA -->
-					{:else if Camera && item?.type === 'camera' && !hide_mobile}
+					{:else if Camera && item?.type === 'camera' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)}>
 							<svelte:component this={Camera} sel={item} />
 						</button>
 
 						<!-- CONFIGURE -->
-					{:else if Configure && item?.type === 'configure'}
+					{:else if Configure && item?.type === 'configure' && !$collapsedStore}
 						<div on:click={() => handleClick(item?.id)} on:keydown role="button" tabindex="0">
 							<svelte:component this={Configure} sel={item} />
 						</div>
@@ -299,13 +325,13 @@
 						</button>
 
 						<!-- DIVIDER -->
-					{:else if Divider && item?.type === 'divider' && !hide_mobile}
+					{:else if Divider && item?.type === 'divider' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)} aria-label={item?.type} tabindex="-1">
 							<svelte:component this={Divider} mode={item?.mode} size={item?.size} />
 						</button>
 
 						<!-- GRAPH -->
-					{:else if Graph && item?.type === 'graph' && !hide_mobile}
+					{:else if Graph && item?.type === 'graph' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)}>
 							<svelte:component
 								this={Graph}
@@ -317,7 +343,7 @@
 						</button>
 
 						<!-- HISTORY -->
-					{:else if History && item?.type === 'history' && !hide_mobile}
+					{:else if History && item?.type === 'history' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)}>
 							<svelte:component
 								this={History}
@@ -327,19 +353,19 @@
 						</button>
 
 						<!-- IFRAME -->
-					{:else if Iframe && item?.type === 'iframe' && !hide_mobile}
+					{:else if Iframe && item?.type === 'iframe' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)}>
 							<svelte:component this={Iframe} url={item?.url} size={item?.size} />
 						</button>
 
 						<!-- NOTIFICATIONS -->
-					{:else if Notifications && item?.type === 'notifications' && !hide_mobile}
+					{:else if Notifications && item?.type === 'notifications' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)}>
 							<svelte:component this={Notifications} sel={item} />
 						</button>
 
 						<!-- IMAGE -->
-					{:else if Image && item?.type === 'image' && !hide_mobile}
+					{:else if Image && item?.type === 'image' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)}>
 							<svelte:component this={Image} entity_id={item?.entity_id} url={item?.url} />
 						</button>
@@ -360,7 +386,7 @@
 						{/key}
 
 						<!-- RADIAL -->
-					{:else if Radial && item?.type === 'radial' && !hide_mobile}
+					{:else if Radial && item?.type === 'radial' && !hide_mobile && !$collapsedStore}
 						<div on:click={() => handleClick(item?.id)} on:keydown role="button" tabindex="0">
 							<svelte:component
 								this={Radial}
@@ -371,7 +397,7 @@
 						</div>
 
 						<!-- SENSOR -->
-					{:else if Sensor && item?.type === 'sensor' && !hide_mobile}
+					{:else if Sensor && item?.type === 'sensor' && !hide_mobile && !$collapsedStore}
 						<div on:click={() => handleClick(item?.id)} on:keydown role="button" tabindex="0">
 							<svelte:component
 								this={Sensor}
@@ -383,7 +409,7 @@
 						</div>
 
 						<!-- TEMPLATE -->
-					{:else if Template && item?.type === 'template' && !hide_mobile}
+					{:else if Template && item?.type === 'template' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)}>
 							<svelte:component this={Template} sel={item} />
 						</button>
@@ -399,19 +425,19 @@
 						</button>
 
 						<!-- TIMER -->
-					{:else if Timer && item?.type === 'timer' && !hide_mobile}
+					{:else if Timer && item?.type === 'timer' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)}>
 							<svelte:component this={Timer} sel={item} />
 						</button>
 
 						<!-- WEATHER -->
-					{:else if Weather && item?.type === 'weather' && !hide_mobile}
+					{:else if Weather && item?.type === 'weather' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)}>
 							<svelte:component this={Weather} sel={item} />
 						</button>
 
 						<!-- WEATHER FORECAST -->
-					{:else if WeatherForecast && item?.type === 'weather_forecast' && !hide_mobile}
+					{:else if WeatherForecast && item?.type === 'weather_forecast' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)}>
 							<svelte:component this={WeatherForecast} sel={item} />
 						</button>
@@ -437,6 +463,8 @@
 		padding-bottom: 1.4rem !important;
 		background-color: var(--theme-colors-sidebar-background);
 		border-right: var(--theme-colors-sidebar-border);
+		display: flex;
+		flex-direction: column;
 	}
 
 	@media (max-width: 768px) {
@@ -463,9 +491,52 @@
 		width: 100%;
 	}
 
+	.collapse-btn {
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		padding: 0;
+		margin-top: 0.5rem;
+		margin-bottom: 0.4rem;
+		background: none !important;
+		border: none !important;
+		color: inherit;
+		cursor: pointer;
+		width: 100%;
+		font-size: 0;
+	}
+
+	.collapse-btn.is-collapsed {
+		justify-content: center;
+	}
+
+	.collapse-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		border-radius: 0.45rem;
+		background: rgba(255, 255, 255, 0.12);
+		opacity: 0.65;
+		transition: opacity 150ms, background 150ms;
+	}
+
+	.collapse-btn:hover .collapse-icon {
+		opacity: 1;
+		background: rgba(255, 255, 255, 0.22);
+	}
+
+	@media (max-width: 768px) {
+		.collapse-btn {
+			display: none;
+		}
+	}
+
 	section {
-		margin-top: 1rem;
-		height: calc(100% - 1rem);
+		flex: 1;
+		overflow: hidden;
 		font-size: var(--theme-sidebar-font-size);
 		display: flex;
 		flex-direction: column;

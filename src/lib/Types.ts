@@ -26,6 +26,7 @@ export interface Dashboard {
 	theme?: string;
 	hide_views?: boolean;
 	hide_sidebar?: boolean;
+	sidebarCollapsed?: boolean;
 	sidebarWidth?: number;
 }
 

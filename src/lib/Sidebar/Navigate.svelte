@@ -9,9 +9,15 @@
 		editMode,
 		lang
 	} from '$lib/Stores';
-	import { onMount } from 'svelte';
+	import { onMount, getContext } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import Icon from '@iconify/svelte';
+	import { readable } from 'svelte/store';
+	import type { Writable } from 'svelte/store';
+
+	const _collapsedCtx = getContext<Writable<boolean> | undefined>('sidebarCollapsed');
+	const collapsedCtx = _collapsedCtx ?? readable(false);
+	$: collapsed = $collapsedCtx;
 
 	export let modalTransitionEnd: boolean | undefined = true;
 
@@ -61,6 +67,25 @@
 	}
 </script>
 
+{#if collapsed}
+	<div class="collapsed-nav">
+		{#each $dashboard?.views ?? [] as view (view.id)}
+			<button
+				class:active={$currentViewId === view.id}
+				title={view.name}
+				on:click={() => {
+					if (!$editMode && view.id && $currentViewId !== view.id) {
+						$currentViewId = view.id;
+						$highlightView = false;
+						$viewUnderline = false;
+					}
+				}}
+			>
+				<Icon icon={view?.icon || 'fluent:tab-add-24-filled'} height="20" />
+			</button>
+		{/each}
+	</div>
+{:else}
 <div class="container" bind:this={container} bind:clientWidth>
 	{#if $dashboard?.views?.length !== 0}
 		{#each $dashboard?.views as view (view.id)}
@@ -102,6 +127,7 @@
 		{$lang('navigate')}
 	{/if}
 </div>
+{/if}
 
 <style>
 	.container {
@@ -151,5 +177,42 @@
 		background-color: transparent;
 		z-index: 1;
 		font-family: inherit;
+	}
+
+	.collapsed-nav {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.25rem;
+		padding: 0.4rem 0;
+	}
+
+	.collapsed-nav button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		margin: 0;
+		padding: 0;
+		border-radius: 0.4rem;
+		background-color: transparent;
+		border: none;
+		color: inherit;
+		cursor: pointer;
+		opacity: 0.55;
+		transition: opacity 150ms, background-color 150ms;
+		font-size: 0;
+	}
+
+	.collapsed-nav button:hover {
+		opacity: 1;
+		background-color: rgba(255, 255, 255, 0.1);
+	}
+
+	.collapsed-nav button.active {
+		opacity: 1;
+		background-color: var(--theme-navigate-background-color);
+		border-radius: 0.4rem;
 	}
 </style>
