@@ -20,9 +20,13 @@
 	$: stateLabel = stateOn ? sel?.state_on || undefined : sel?.state_off || undefined;
 
 	$: isUrlIcon = sel?.icon?.startsWith('/') || sel?.icon?.startsWith('http');
-	$: iconSrc = isUrlIcon && sel?.icon?.startsWith('/') && $configuration?.hassUrl && !$configuration?.ingress
-		? `${base}/_api/camera_proxy?path=${encodeURIComponent(sel.icon)}`
-		: sel?.icon;
+	$: iconSrc = (() => {
+		if (!isUrlIcon || !sel?.icon?.startsWith('/') || !$configuration?.hassUrl || $configuration?.ingress) {
+			return sel?.icon;
+		}
+		const token = $configuration?.token ? `&token=${encodeURIComponent($configuration.token)}` : '';
+		return `${base}/_api/camera_proxy?path=${encodeURIComponent(sel.icon)}${token}`;
+	})();
 
 	function handleClick() {
 		if ($editMode) {
