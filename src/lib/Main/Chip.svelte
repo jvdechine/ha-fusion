@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { states, onStates, editMode } from '$lib/Stores';
+	import { states, onStates, editMode, configuration } from '$lib/Stores';
 	import { getName } from '$lib/Utils';
 	import { openModal } from 'svelte-modals';
+	import { base } from '$app/paths';
 	import ComputeIcon from '$lib/Components/ComputeIcon.svelte';
 	import StateLogic from '$lib/Components/StateLogic.svelte';
 	import Icon from '@iconify/svelte';
@@ -16,9 +17,12 @@
 	$: iconColor = stateOn
 		? sel?.color || 'var(--theme-button-background-color-on)'
 		: 'rgba(255, 255, 255, 0.4)';
-	$: stateLabel = stateOn
-		? sel?.state_on || undefined
-		: sel?.state_off || undefined;
+	$: stateLabel = stateOn ? sel?.state_on || undefined : sel?.state_off || undefined;
+
+	$: isUrlIcon = sel?.icon?.startsWith('/') || sel?.icon?.startsWith('http');
+	$: iconSrc = isUrlIcon && sel?.icon?.startsWith('/') && $configuration?.hassUrl && !$configuration?.ingress
+		? `${base}/_api/camera_proxy?path=${encodeURIComponent(sel.icon)}`
+		: sel?.icon;
 
 	function handleClick() {
 		if ($editMode) {
@@ -31,7 +35,9 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="chip" class:edit={$editMode} on:click={handleClick}>
 	<div class="icon" style:color={iconColor}>
-		{#if sel?.icon}
+		{#if isUrlIcon}
+			<img src={iconSrc} alt="" class="icon-img" />
+		{:else if sel?.icon}
 			<Icon icon={sel.icon} height="1rem" />
 		{:else if entity_id}
 			<ComputeIcon {entity_id} size="1rem" skipEntityPicture={true} />
@@ -77,6 +83,13 @@
 		align-items: center;
 		flex-shrink: 0;
 		transition: color 200ms ease;
+	}
+
+	.icon-img {
+		width: 1.4rem;
+		height: 1.4rem;
+		border-radius: 50%;
+		object-fit: cover;
 	}
 
 	.info {
