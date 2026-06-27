@@ -6,7 +6,7 @@ dotenv.config();
 const HASS_URL = (process.env.HASS_INTERNAL_URL || process.env.HASS_URL)?.replace(/\/$/, '');
 const SUPERVISOR_TOKEN = process.env.SUPERVISOR_TOKEN;
 
-const ALLOWED_PATHS = /^\/api\/(camera_proxy|image\/serve)\//;
+const ALLOWED_PATHS = /^\/api\/(camera_proxy|camera_proxy_stream|image\/serve)\//;
 
 export const GET = async ({ url }) => {
 	const path = url.searchParams.get('path');

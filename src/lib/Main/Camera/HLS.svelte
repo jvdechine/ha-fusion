@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { connection, editMode } from '$lib/Stores';
+	import { configuration, connection, editMode } from '$lib/Stores';
 	import { onDestroy } from 'svelte';
 	import type Hls from 'hls.js';
 
@@ -46,6 +46,10 @@
 
 			stream_url = response.url;
 			if (!stream_url) return;
+
+			if (stream_url.startsWith('/') && $configuration?.hassUrl && !$configuration?.ingress) {
+				stream_url = `${$configuration.hassUrl.replace(/\/$/, '')}${stream_url}`;
+			}
 
 			// hls
 			const { default: Hls } = await import('hls.js');
