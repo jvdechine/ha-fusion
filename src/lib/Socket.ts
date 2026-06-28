@@ -108,6 +108,20 @@ export async function authentication(configuration: Configuration) {
 					sessionStorage.setItem('event', 'refresh');
 					location.reload();
 				}
+
+				// open_camera
+				else if (trigger === 'open_camera') {
+					const entity_id = message?.variables?.trigger?.event?.data?.entity_id;
+					const timeout = message?.variables?.trigger?.event?.data?.timeout;
+					if (entity_id) {
+						openModal(() => import('$lib/Modal/CameraModal.svelte'), {
+							sel: { entity_id }
+						});
+						if (timeout) {
+							setTimeout(() => closeModal(), timeout * 1000);
+						}
+					}
+				}
 			},
 			{
 				type: 'subscribe_trigger',

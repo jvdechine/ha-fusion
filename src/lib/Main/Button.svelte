@@ -22,7 +22,7 @@
 	import { callService, type HassEntity } from 'home-assistant-js-websocket';
 	import { marked } from 'marked';
 	import { onDestroy } from 'svelte';
-	import { openModal } from 'svelte-modals';
+	import { openModal, closeModal } from 'svelte-modals';
 	import Ripple from 'svelte-ripple';
 	import parser from 'js-yaml';
 
@@ -36,6 +36,7 @@
 	$: color = (sel?.template?.color && template?.color?.output) || sel?.color;
 	$: marquee = sel?.marquee;
 	$: more_info = sel?.more_info;
+	$: confirm = sel?.confirm;
 
 	let entity: HassEntity;
 	let contentWidth: number;
@@ -201,6 +202,22 @@
 		}
 	}
 
+	function handleToggle() {
+		if (confirm && more_info === false) {
+			openModal(() => import('$lib/Modal/ConfirmAlert.svelte'), {
+				title: 'Confirmar ação',
+				message: 'Tem certeza que deseja realizar essa ação?',
+				confirm: () => {
+					closeModal();
+					toggle();
+				},
+				cancel: closeModal
+			});
+		} else {
+			toggle();
+		}
+	}
+
 	/**
 	 * Delegate to handleEvent
 	 */
@@ -232,7 +249,7 @@
 				sectionName
 			});
 		} else if (more_info === false) {
-			toggle();
+			handleToggle();
 		} else {
 			switch (getDomain(sel?.entity_id)) {
 				// light
@@ -526,7 +543,7 @@
 		class="left"
 		on:click|stopPropagation={(event) => {
 			if (!$editMode) {
-				toggle();
+				handleToggle();
 			} else {
 				handleEvent(event);
 			}

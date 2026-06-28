@@ -500,7 +500,7 @@
 		border-radius: 0.6rem;
 		outline-offset: -2px;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, 14.5rem);
+		grid-template-columns: repeat(auto-fill, min(14.5rem, calc(25% - 0.3rem)));
 		grid-auto-rows: min-content;
 		gap: 0.4rem;
 		border-radius: 0.6rem;
@@ -529,8 +529,7 @@
 		}
 
 		.items {
-			display: flex;
-			flex-wrap: wrap;
+			grid-template-columns: repeat(2, 1fr);
 		}
 
 		section.has-iframe {
