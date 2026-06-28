@@ -190,7 +190,11 @@
 		return section?.items?.some((i: any) => i.type === 'iframe') ?? false;
 	}
 
-	function itemStyles(type: string) {
+	function sectionHasCameras(items: any[]): boolean {
+		return items?.some((i: any) => i.type === 'camera') ?? false;
+	}
+
+	function itemStyles(type: string, inCameraSection = false) {
 		const large = ['conditional_media', 'picture_elements', 'camera'];
 		if (type === 'title') {
 			return `grid-column: 1 / -1; width: 100%;`;
@@ -200,6 +204,13 @@
 				grid-column: 1 / -1;
 				grid-row: span 1;
 				width: 100%;
+				display: ;
+      `;
+		}
+		if (type === 'camera' && inCameraSection) {
+			return `
+				grid-column: span 1;
+				grid-row: span 4;
 				display: ;
       `;
 		}
@@ -332,6 +343,7 @@
 				>
 					{#each section?.sections as stackSection (`${stackSection?.id}${stackSection?.[SHADOW_ITEM_MARKER_PROPERTY_NAME] ? '_' + stackSection?.[SHADOW_ITEM_MARKER_PROPERTY_NAME] : ''}`)}
 						{@const empty = $editMode && !stackSection?.items?.length}
+						{@const stackHasCameras = sectionHasCameras(stackSection?.items)}
 						<section
 							id={String(stackSection.id)}
 							data-is-dnd-shadow-item-hint={stackSection?.[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
@@ -343,6 +355,7 @@
 								class="items"
 								data-is-dnd-shadow-item-hint={stackSection?.[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
 								style={sectionStyles(section?.type, $editMode, $motion, empty)}
+								style:grid-template-columns={stackHasCameras ? 'repeat(2, 1fr)' : undefined}
 								use:dndzone={{
 									...dndOptions,
 									type: 'item',
@@ -360,7 +373,7 @@
 										class="item"
 										animate:flip={{ duration: $motion }}
 										tabindex="-1"
-										style={itemStyles(item?.type)}
+										style={itemStyles(item?.type, stackHasCameras)}
 									>
 										<Content {item} sectionName={stackSection?.name} />
 									</div>
@@ -434,6 +447,7 @@
 			<!-- normal -->
 			{:else}
 				{@const empty = $editMode && !section?.items?.length}
+				{@const mainHasCameras = sectionHasCameras(section?.items)}
 
 				<SectionHeader {view} {section} />
 
@@ -442,6 +456,7 @@
 					class:has-iframe={sectionHasIframe(section)}
 					data-is-dnd-shadow-item-hint={section?.[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
 					style={sectionStyles(section?.type, $editMode, $motion, empty)}
+					style:grid-template-columns={mainHasCameras ? 'repeat(2, 1fr)' : undefined}
 					use:dndzone={{
 						...dndOptions,
 						type: 'item',
@@ -458,7 +473,7 @@
 							class="item"
 							animate:flip={{ duration: $motion }}
 							tabindex="-1"
-							style={itemStyles(item?.type)}
+							style={itemStyles(item?.type, mainHasCameras)}
 						>
 							<Content {item} sectionName={section?.name} />
 						</div>
@@ -500,7 +515,7 @@
 		border-radius: 0.6rem;
 		outline-offset: -2px;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, min(14.5rem, calc(25% - 0.3rem)));
+		grid-template-columns: repeat(auto-fill, 14.5rem);
 		grid-auto-rows: min-content;
 		gap: 0.4rem;
 		border-radius: 0.6rem;
