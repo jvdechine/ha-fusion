@@ -1,6 +1,6 @@
 {
 	"name": "ha-fusion",
-	"version": "2026.6.29",
+	"version": "2026.6.30",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",

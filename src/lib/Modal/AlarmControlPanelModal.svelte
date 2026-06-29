@@ -109,6 +109,7 @@
 				{options}
 				placeholder={$lang('alarm_modes_label')}
 				value={'alarm_disarm'}
+				searchable={false}
 				on:change={(event) => {
 					selectedService = event.detail;
 					if(entity.attributes.code_arm_required == false){
@@ -120,7 +121,7 @@
 
 		{#if entity.attributes.code_arm_required == true || state !== 'disarmed'}
 			<div class="container">
-				<input type="password" class:reject bind:value={code} />
+				<input type="password" class:reject bind:value={code} readonly />
 
 				<div class="buttons">
 					{#each [1, 2, 3, 4, 5, 6, 7, 8, 9] as digit}

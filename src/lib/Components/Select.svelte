@@ -14,6 +14,7 @@
 	export let getIconString: boolean | undefined = undefined;
 	export let defaultIcon: string | undefined = undefined;
 	export let clearable: boolean | undefined = undefined;
+	export let searchable = true;
 	export let options: {
 		id: string;
 		label: string;
@@ -182,30 +183,40 @@
 		</button>
 	{/if}
 
-	{#if listOpen}
-		<input
-			data-modal
-			bind:value={search}
-			bind:this={input}
-			on:focus={handleFocus}
-			on:input={() => {
-				highlightedIndex = 0;
-				scrollToIndex = highlightedIndex;
-			}}
-			{...inputProps}
-		/>
+	{#if searchable}
+		{#if listOpen}
+			<input
+				data-modal
+				bind:value={search}
+				bind:this={input}
+				on:focus={handleFocus}
+				on:input={() => {
+					highlightedIndex = 0;
+					scrollToIndex = highlightedIndex;
+				}}
+				{...inputProps}
+			/>
+		{:else}
+			<!-- only to display label -->
+			<input
+				data-modal
+				value={options?.[selectedIndex]?.label || ''}
+				on:focus={async () => {
+					listOpen = true;
+					await tick();
+					input?.focus();
+				}}
+				{...inputProps}
+			/>
+		{/if}
 	{:else}
-		<!-- only to display label -->
-		<input
-			data-modal
-			value={options?.[selectedIndex]?.label || ''}
-			on:focus={async () => {
-				listOpen = true;
-				await tick();
-				input?.focus();
-			}}
-			{...inputProps}
-		/>
+		<button
+			class="input no-search"
+			style={inputProps.style}
+			on:click={() => { listOpen = !listOpen; }}
+		>
+			{options?.[selectedIndex]?.label || placeholder}
+		</button>
 	{/if}
 </div>
 
@@ -299,6 +310,15 @@
 
 	.input {
 		padding-right: 3rem !important;
+	}
+
+	.no-search {
+		text-align: left;
+		cursor: pointer;
+		color: white;
+		background: none;
+		border: none;
+		width: 100%;
 	}
 
 	/* list */
