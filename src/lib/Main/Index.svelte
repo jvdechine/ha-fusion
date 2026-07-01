@@ -195,7 +195,10 @@
 	}
 
 	function itemStyles(type: string, inCameraSection = false) {
-		const large = ['conditional_media', 'picture_elements', 'camera', 'energy_chart'];
+		const large = ['conditional_media', 'picture_elements', 'camera'];
+		if (type === 'energy_chart') {
+			return `grid-column: 1 / -1; grid-row: span 4; width: 100%;`;
+		}
 		if (type === 'title') {
 			return `grid-column: 1 / -1; width: 100%;`;
 		}

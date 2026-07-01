@@ -17,6 +17,7 @@
 
 	const periodOptions = [
 		{ id: '5minute', label: $lang('period_5minute') },
+		{ id: '30minute', label: '30 minutos' },
 		{ id: 'hour', label: $lang('period_hour') },
 		{ id: 'day', label: $lang('period_day') },
 		{ id: 'week', label: $lang('period_week') },

@@ -38,18 +38,33 @@
 	$: {
 		clearInterval(refreshTimer);
 		if ($connection && (ca || cb || ia || ib)) {
-			const ms = period === '5minute' ? 5 * 60 * 1000 : 10 * 60 * 1000;
+			const ms = period === '5minute' ? 5 * 60 * 1000 : period === '30minute' ? 30 * 60 * 1000 : 10 * 60 * 1000;
 			refreshTimer = setInterval(fetchData, ms);
 		}
 	}
 	onDestroy(() => clearInterval(refreshTimer));
 
 	function windowMs(p: string): number {
-		if (p === '5minute') return 3 * 3600 * 1000;
-		if (p === 'hour')    return 24 * 3600 * 1000;
-		if (p === 'day')     return 30 * 24 * 3600 * 1000;
-		if (p === 'week')    return 12 * 7 * 24 * 3600 * 1000;
+		if (p === '5minute')  return 3 * 3600 * 1000;
+		if (p === '30minute') return 24 * 3600 * 1000;
+		if (p === 'hour')     return 24 * 3600 * 1000;
+		if (p === 'day')      return 30 * 24 * 3600 * 1000;
+		if (p === 'week')     return 12 * 7 * 24 * 3600 * 1000;
 		return 30 * 24 * 3600 * 1000;
+	}
+
+	// Groups 5-minute data into 30-minute buckets by summing
+	function groupTo30min(data: DataPoint[]): DataPoint[] {
+		const BUCKET = 30 * 60 * 1000;
+		const map = new Map<number, DataPoint>();
+		for (const d of data) {
+			const key = Math.floor(d.x.getTime() / BUCKET) * BUCKET;
+			const existing = map.get(key) ?? { x: new Date(key), consumptionRaw: 0, injectionRaw: 0 };
+			existing.consumptionRaw += d.consumptionRaw;
+			existing.injectionRaw  += d.injectionRaw;
+			map.set(key, existing);
+		}
+		return [...map.values()].sort((a, b) => a.x.getTime() - b.x.getTime());
 	}
 
 	function extractValue(item: any): number {
@@ -88,12 +103,13 @@
 		const start_time = new Date(Date.now() - windowMs(period)).toISOString();
 
 		try {
+			const haPeriod = period === '30minute' ? '5minute' : period;
 			const res: any = await conn.sendMessagePromise({
 				type: 'recorder/statistics_during_period',
 				start_time,
 				end_time,
 				statistic_ids: ids,
-				period
+				period: haPeriod
 			});
 
 			const map = new Map<string, DataPoint>();
@@ -119,6 +135,8 @@
 			applyData(ib, 'injectionRaw');
 
 			let sorted = [...map.values()].sort((a, b) => a.x.getTime() - b.x.getTime());
+
+			if (period === '30minute') sorted = groupTo30min(sorted);
 
 			// Drop first point if it looks like an initial statistics dump
 			if (sorted.length >= 2) {
