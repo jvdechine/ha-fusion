@@ -195,7 +195,7 @@
 	}
 
 	function itemStyles(type: string, inCameraSection = false) {
-		const large = ['conditional_media', 'picture_elements', 'camera'];
+		const large = ['conditional_media', 'picture_elements', 'camera', 'energy_chart'];
 		if (type === 'title') {
 			return `grid-column: 1 / -1; width: 100%;`;
 		}
@@ -312,6 +312,7 @@
 	style:display={hidden ? 'none' : ''}
 	style:transition="opacity {$motion}ms ease, outline-color {$motion}ms ease"
 	style:opacity={$editMode && view?.sections.length === 0 ? '0' : '1'}
+	style:padding-bottom={$editMode ? '10rem' : undefined}
 	use:dndzone={{ ...dndOptions, type: 'section', items: view.sections }}
 	on:consider={dragSection}
 	on:finalize={dragSection}

@@ -11,11 +11,12 @@
 	import NavigateButton from '$lib/Main/NavigateButton.svelte';
 	import Title from '$lib/Main/Title.svelte';
 	import Chip from '$lib/Main/Chip.svelte';
+	import EnergyChart from '$lib/Main/EnergyChart.svelte';
 
 	export let item: any;
 	export let sectionName: string | undefined = undefined;
 
-	const large = ['conditional_media', 'picture_elements', 'camera', 'iframe'];
+	const large = ['conditional_media', 'picture_elements', 'camera', 'iframe', 'energy_chart'];
 </script>
 
 {#if item?.[SHADOW_ITEM_MARKER_PROPERTY_NAME] && large.includes(item?.type)}
@@ -44,6 +45,8 @@
 	<Title sel={item} />
 {:else if item?.type === 'chip'}
 	<Chip sel={item} />
+{:else if item?.type === 'energy_chart'}
+	<EnergyChart sel={item} />
 {:else}
 	<!-- if types are changed internally, don't break ui -->
 	<Configure sel={{ id: item?.id }} />

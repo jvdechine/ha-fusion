@@ -129,6 +129,7 @@ export interface PersistentNotification {
 export type SidebarItem = BarItem &
 	CameraItem &
 	DateItem &
+	EnergyChartItem &
 	GraphItem &
 	HistoryItem &
 	IframeItem &
@@ -217,6 +218,24 @@ export interface DateItem {
 	short_month?: boolean;
 	hide?: string;
 	layout?: string;
+	hide_mobile?: boolean;
+}
+
+export interface EnergyChartItem {
+	type?: string;
+	id?: number;
+	name?: string;
+	consumption_entity_a?: string;
+	consumption_entity_b?: string;
+	injection_entity_a?: string;
+	injection_entity_b?: string;
+	/** @deprecated use consumption_entity_a */
+	consumption_entity?: string;
+	/** @deprecated use injection_entity_a */
+	injection_entity?: string;
+	period?: string;
+	divisor?: number;
+	divisor_entity?: string;
 	hide_mobile?: boolean;
 }
 

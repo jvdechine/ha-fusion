@@ -29,6 +29,7 @@
 	import Image from '$lib/Sidebar/Image.svelte';
 	import Camera from '$lib/Main/Camera.svelte';
 	import History from '$lib/Sidebar/History.svelte';
+	import EnergyChart from '$lib/Sidebar/EnergyChart.svelte';
 	import Graph from '$lib/Sidebar/Graph.svelte';
 	import Template from '$lib/Sidebar/Template.svelte';
 	import Timer from '$lib/Sidebar/Timer.svelte';
@@ -172,6 +173,12 @@
 			id: 'iframe',
 			type: $lang('iframe'),
 			component: Iframe
+		},
+		{
+			id: 'energy_chart',
+			type: 'Gráfico de Energia',
+			component: EnergyChart,
+			props: {}
 		},
 		{
 			id: 'graph',
@@ -329,6 +336,10 @@
 					sel,
 					demo: $demo.radial
 				});
+				break;
+
+			case 'energy_chart':
+				openModal(() => import('$lib/Modal/EnergyChartConfig.svelte'), { sel });
 				break;
 
 			case 'graph':

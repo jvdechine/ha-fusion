@@ -34,6 +34,7 @@
 	let Configure: ComponentType;
 	let Date: ComponentType;
 	let Divider: ComponentType;
+	let EnergyChart: ComponentType;
 	let Graph: ComponentType;
 	let History: ComponentType;
 	let Iframe: ComponentType;
@@ -54,6 +55,8 @@
 		configure: () => import('$lib/Sidebar/Configure.svelte').then((c) => (Configure = c.default)),
 		date: () => import('$lib/Sidebar/Date.svelte').then((c) => (Date = c.default)),
 		divider: () => import('$lib/Sidebar/Divider.svelte').then((c) => (Divider = c.default)),
+		energy_chart: () =>
+			import('$lib/Sidebar/EnergyChart.svelte').then((c) => (EnergyChart = c.default)),
 		graph: () => import('$lib/Sidebar/Graph.svelte').then((c) => (Graph = c.default)),
 		history: () => import('$lib/Sidebar/History.svelte').then((c) => (History = c.default)),
 		iframe: () => import('$lib/Sidebar/Iframe.svelte').then((c) => (Iframe = c.default)),
@@ -120,6 +123,8 @@
 				openModal(() => import('$lib/Modal/DateConfig.svelte'), { sel });
 			} else if (sel?.type === 'divider') {
 				openModal(() => import('$lib/Modal/DividerConfig.svelte'), { sel });
+			} else if (sel?.type === 'energy_chart') {
+				openModal(() => import('$lib/Modal/EnergyChartConfig.svelte'), { sel });
 			} else if (sel?.type === 'graph') {
 				openModal(() => import('$lib/Modal/GraphConfig.svelte'), { sel });
 			} else if (sel?.type === 'history') {
@@ -328,6 +333,18 @@
 					{:else if Divider && item?.type === 'divider' && !hide_mobile && !$collapsedStore}
 						<button on:click={() => handleClick(item?.id)} aria-label={item?.type} tabindex="-1">
 							<svelte:component this={Divider} mode={item?.mode} size={item?.size} />
+						</button>
+
+						<!-- ENERGY CHART -->
+					{:else if EnergyChart && item?.type === 'energy_chart' && !hide_mobile && !$collapsedStore}
+						<button on:click={() => handleClick(item?.id)}>
+							<svelte:component
+								this={EnergyChart}
+								consumption_entity={item?.consumption_entity}
+								injection_entity={item?.injection_entity}
+								period={item?.period}
+								name={item?.name}
+							/>
 						</button>
 
 						<!-- GRAPH -->

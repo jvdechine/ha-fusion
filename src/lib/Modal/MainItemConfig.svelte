@@ -14,6 +14,7 @@
 	} from '$lib/Modal/getRandomEntity';
 
 	import Button from '$lib/Main/Button.svelte';
+	import EnergyChart from '$lib/Main/EnergyChart.svelte';
 	import Camera from '$lib/Main/Camera.svelte';
 	import ConditionalMedia from '$lib/Main/ConditionalMedia.svelte';
 	import Empty from '$lib/Main/Empty.svelte';
@@ -169,6 +170,12 @@
 				demo: $demo.sensor,
 				sel
 			}
+		},
+		{
+			id: 'energy_chart',
+			type: 'Gráfico de Energia',
+			component: EnergyChart,
+			props: { sel }
 		}
 	];
 
@@ -228,6 +235,9 @@
 				break;
 			case 'chip':
 				openModal(() => import('$lib/Modal/ChipConfig.svelte'), { sel });
+				break;
+			case 'energy_chart':
+				openModal(() => import('$lib/Modal/EnergyChartConfig.svelte'), { sel });
 				break;
 			default:
 				openModal(() => import('$lib/Modal/MainItemConfig.svelte'), { sel });
