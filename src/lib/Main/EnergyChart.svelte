@@ -31,13 +31,13 @@
 	$: ia = sel?.injection_entity_a || sel?.injection_entity;
 	$: ib = sel?.injection_entity_b;
 
-	$: if (ca || cb || ia || ib) fetchData();
+	$: if ($connection && (ca || cb || ia || ib)) fetchData();
 
 	// Auto-refresh: every 5 min for 5minute period, every 10 min otherwise
 	let refreshTimer: ReturnType<typeof setInterval>;
 	$: {
 		clearInterval(refreshTimer);
-		if (ca || cb || ia || ib) {
+		if ($connection && (ca || cb || ia || ib)) {
 			const ms = period === '5minute' ? 5 * 60 * 1000 : 10 * 60 * 1000;
 			refreshTimer = setInterval(fetchData, ms);
 		}
@@ -78,7 +78,7 @@
 		if (!ids.length) return;
 
 		const conn = get(connection);
-		if (!conn) { noData = true; return; }
+		if (!conn) return;
 
 		loading = true;
 		noData = false;
