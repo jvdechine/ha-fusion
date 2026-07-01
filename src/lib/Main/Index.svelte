@@ -488,7 +488,7 @@
 <style>
 	main {
 		grid-area: main;
-		padding: 0 2rem 2rem;
+		padding: 0 2rem 8rem;
 		display: grid;
 		gap: 1.5rem;
 		outline: transparent;
@@ -535,7 +535,7 @@
 	/* Phone and Tablet (portrait) */
 	@media all and (max-width: 768px) {
 		main {
-			padding: 0 1.25rem 1.25rem 1.25rem;
+			padding: 0 1.25rem 6rem 1.25rem;
 			overflow-x: hidden;
 		}
 
